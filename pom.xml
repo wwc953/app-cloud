@@ -29,6 +29,7 @@
 
     <modules>
         <module>app-user</module>
+        <module>app-order</module>
     </modules>
 
     <dependencyManagement>
