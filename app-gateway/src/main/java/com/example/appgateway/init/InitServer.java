@@ -14,6 +14,6 @@ public class InitServer implements ApplicationListener<ApplicationStartedEvent> 
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
-        gatwayDataService.loadRouteData();
+//        gatwayDataService.loadRouteData();
     }
 }
