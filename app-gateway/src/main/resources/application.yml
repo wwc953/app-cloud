@@ -1,0 +1,66 @@
+# 动态路由
+server:
+  port: 7000
+  # 设置请求头大小
+  max-http-header-size: 10MB
+spring:
+  application:
+    name: app-gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowCredentials: true
+            allowed-origins: "*"
+            allowed-headers: "*"
+            allowed-methods: "*"
+            max-age: 3600
+#      routes:
+#        #表示websocket的转发
+#        - id: app-metadata-websocket
+#          uri: lb:ws://app-websocket
+#          predicates: Path=/app-websocket/**
+      default-filters:
+        #剔除重复的响应头 RETAIN_FIRST保留第一个
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
+        - name: Hystrix
+          args:
+            name: default
+            fallbackUri: forward:/fallback  #返回路径
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        enabled: true
+
+# springboot健康监控
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+    health:
+      show-details: always
+
+response:
+  enc: false
+
+#hystrix配置
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            #断路器的超时时间ms,默认1000
+            timeoutInMilliseconds: 60000
+      circuitBreaker:
+        #是否启动熔断器，默认为true，false表示不要引入Hystrix。
+        enabled: true
+        #当在配置时间窗口内达到此数量的失败后，进行短路
+        requestVolumeThreshold: 20
+        #出错百分比阈值，当达到此阈值后，开始短路。默认50%）
+        errorThresholdPercentage: 50%
+        #短路多久以后开始尝试是否恢复，默认5s）-单位ms
+        sleepWindowInMilliseconds: 30000
+

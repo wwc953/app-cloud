@@ -30,6 +30,7 @@
     <modules>
         <module>app-user</module>
         <module>app-order</module>
+        <module>app-gateway</module>
     </modules>
 
     <dependencyManagement>
