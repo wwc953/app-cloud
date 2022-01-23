@@ -1,3 +1,7 @@
-spring.cloud.nacos.config.server-addr=localhost:8848
-spring.cloud.nacos.config.prefix=app-gateway
-spring.cloud.nacos.config.group=APPGATEWAY
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        prefix: app-gateway
+        group: APPGATEWA
