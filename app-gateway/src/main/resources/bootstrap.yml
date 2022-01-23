@@ -4,4 +4,4 @@ spring:
       config:
         server-addr: localhost:18848
         prefix: app-gateway
-        group: APPGATEWA
+        group: APPGATEWAY
