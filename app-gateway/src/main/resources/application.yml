@@ -63,4 +63,6 @@ hystrix:
         errorThresholdPercentage: 50%
         #短路多久以后开始尝试是否恢复，默认5s）-单位ms
         sleepWindowInMilliseconds: 30000
-
+logging:
+  file:
+    path: /home/logs/getway
