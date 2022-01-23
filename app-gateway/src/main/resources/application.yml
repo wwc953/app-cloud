@@ -16,12 +16,6 @@ spring:
             allowed-headers: "*"
             allowed-methods: "*"
             max-age: 3600
-        discovery:
-          locator:
-            # 打开后只要注册过的服务可以通过服务名转发（服务名称小写，无需配置路由）
-            # 网关地址/服务名称/方法 如（http://localhost:7070/app-user/user/123）
-            enabled: true
-            lower-case-service-id: true #服务名小写
       default-filters:
         #剔除重复的响应头 RETAIN_FIRST保留第一个
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
@@ -29,6 +23,12 @@ spring:
           args:
             name: default
             fallbackUri: forward:/fallback  #返回路径
+      discovery:
+        locator:
+          # 打开后只要注册过的服务可以通过服务名转发（服务名称小写，无需配置路由）
+          # 网关地址/服务名称/方法 如（http://localhost:7070/app-user/user/123）
+          enabled: true
+          lower-case-service-id: true #服务名小写
     nacos:
       discovery:
         server-addr: localhost:8848
