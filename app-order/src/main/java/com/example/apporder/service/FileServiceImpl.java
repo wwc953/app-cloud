@@ -12,10 +12,9 @@ import java.io.InputStream;
 @Slf4j
 @Component
 public class FileServiceImpl {
-    @Value("${server.port:1010}")
-    String serverport;
 
-    public static final String FILE_BASE_PATH = "/Users/wangwc/IdeaProjects/uploadfiles" + File.separator;
+    @Value("${file.uploaddir:/Users/wangwc/IdeaProjects/uploadfiles/}")
+    String fileBasePath;
 
     public String upload(MultipartFile file, String custID) throws IOException {
         InputStream in = file.getInputStream();
@@ -36,7 +35,11 @@ public class FileServiceImpl {
 //            return "文件类型错误";
 //        }
 
-        File savefile = new File(FILE_BASE_PATH + originalFilename);
+        File savefile = new File(fileBasePath);
+        if (!savefile.exists()) {
+            savefile.mkdirs();
+        }
+        savefile = new File(fileBasePath + originalFilename);
         log.info(savefile.getPath());
         file.transferTo(savefile);
         return "OK";

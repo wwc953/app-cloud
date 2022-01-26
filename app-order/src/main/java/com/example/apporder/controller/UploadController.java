@@ -4,6 +4,7 @@ import com.example.apporder.service.FileServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +26,9 @@ import java.io.InputStream;
 @Api(tags = "文件上传")
 public class UploadController {
 
+    @Value("${file.uploaddir:/Users/wangwc/IdeaProjects/uploadfiles/}")
+    String fileBasePath;
+
     @Resource
     FileServiceImpl fileService;
 
@@ -43,7 +47,7 @@ public class UploadController {
 //        URL url = new URL(FileServiceImpl.FILE_BASE_PATH + fileName);
 //        in = url.openConnection().getInputStream();
 
-        in = new FileInputStream(new File(FileServiceImpl.FILE_BASE_PATH + fileName));
+        in = new FileInputStream(new File(fileBasePath + fileName));
 
         byte[] b = new byte[1024];
         response.setHeader("content-disposition", "attachment;fileName=" + fileName);
