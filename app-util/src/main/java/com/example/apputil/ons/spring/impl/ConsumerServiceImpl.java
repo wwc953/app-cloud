@@ -1,13 +1,14 @@
-package com.example.appuser.ons.spring.impl;
+package com.example.apputil.ons.spring.impl;
 
-import com.example.appuser.ons.api.IConsumerService;
-import com.example.appuser.ons.api.MessageHandle;
-import com.example.appuser.ons.bean.ConsumerInfoEntry;
-import com.example.appuser.ons.factory.OnsConsumerFactory;
+import com.example.apputil.ons.api.IConsumerService;
+import com.example.apputil.ons.api.MessageHandle;
+import com.example.apputil.ons.bean.ConsumerInfoEntry;
+import com.example.apputil.ons.factory.OnsConsumerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
+
 @Slf4j
 public class ConsumerServiceImpl implements IConsumerService {
     private String binder;

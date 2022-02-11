@@ -1,14 +1,16 @@
 package com.example.appuser.commandline;
 
-import com.example.appuser.ons.api.IConsumerService;
-import com.example.appuser.ons.api.MessageHandle;
-import com.example.appuser.ons.bean.ConsumerInfoEntry;
+import com.example.apputil.ons.api.IConsumerService;
+import com.example.apputil.ons.api.MessageHandle;
+import com.example.apputil.ons.bean.ConsumerInfoEntry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Component
 @Order(1)

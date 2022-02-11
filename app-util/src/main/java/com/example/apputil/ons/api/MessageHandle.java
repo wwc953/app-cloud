@@ -1,4 +1,4 @@
-package com.example.appuser.ons.api;
+package com.example.apputil.ons.api;
 
 public interface MessageHandle {
     boolean handle(String msgKey, String msg);

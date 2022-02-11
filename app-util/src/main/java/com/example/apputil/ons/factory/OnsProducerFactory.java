@@ -1,7 +1,7 @@
-package com.example.appuser.ons.factory;
+package com.example.apputil.ons.factory;
 
-import com.example.appuser.ons.bean.MqProperties;
-import com.example.appuser.ons.constant.PRODUCER_TYPE;
+import com.example.apputil.ons.bean.MqProperties;
+import com.example.apputil.ons.constant.PRODUCER_TYPE;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.MQAdmin;
 import org.apache.rocketmq.client.exception.MQClientException;

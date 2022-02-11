@@ -1,4 +1,4 @@
-package com.example.appuser.ons.bean;
+package com.example.apputil.ons.bean;
 
 public class ConsumerInfoEntry {
     private String groupId;

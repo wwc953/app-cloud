@@ -1,12 +1,13 @@
-package com.example.appuser.ons.config;
+package com.example.apputil.ons.config;
 
-import com.example.appuser.ons.api.IConsumerService;
-import com.example.appuser.ons.api.IProducerService;
-import com.example.appuser.ons.bean.MqProperties;
-import com.example.appuser.ons.factory.OnsConsumerFactory;
-import com.example.appuser.ons.factory.OnsProducerFactory;
-import com.example.appuser.ons.spring.impl.ConsumerServiceImpl;
-import com.example.appuser.ons.spring.impl.ProducerServiceImpl;
+
+import com.example.apputil.ons.api.IConsumerService;
+import com.example.apputil.ons.api.IProducerService;
+import com.example.apputil.ons.bean.MqProperties;
+import com.example.apputil.ons.factory.OnsConsumerFactory;
+import com.example.apputil.ons.factory.OnsProducerFactory;
+import com.example.apputil.ons.spring.impl.ConsumerServiceImpl;
+import com.example.apputil.ons.spring.impl.ProducerServiceImpl;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

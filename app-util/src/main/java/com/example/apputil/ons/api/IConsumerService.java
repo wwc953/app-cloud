@@ -1,6 +1,7 @@
-package com.example.appuser.ons.api;
+package com.example.apputil.ons.api;
 
-import com.example.appuser.ons.bean.ConsumerInfoEntry;
+
+import com.example.apputil.ons.bean.ConsumerInfoEntry;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 
 public interface IConsumerService {

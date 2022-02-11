@@ -1,4 +1,4 @@
-package com.example.appuser.ons.constant;
+package com.example.apputil.ons.constant;
 
 public enum PRODUCER_TYPE {
     NORMAL,

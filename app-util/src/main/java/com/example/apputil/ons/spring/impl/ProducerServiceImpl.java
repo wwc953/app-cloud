@@ -1,7 +1,7 @@
-package com.example.appuser.ons.spring.impl;
+package com.example.apputil.ons.spring.impl;
 
-import com.example.appuser.ons.api.IProducerService;
-import com.example.appuser.ons.factory.OnsProducerFactory;
+import com.example.apputil.ons.api.IProducerService;
+import com.example.apputil.ons.factory.OnsProducerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.MQProducer;
 import org.apache.rocketmq.common.message.Message;
