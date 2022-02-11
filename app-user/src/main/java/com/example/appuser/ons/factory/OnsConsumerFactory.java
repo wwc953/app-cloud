@@ -15,6 +15,7 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
 @Slf4j
 public class OnsConsumerFactory {
     MqProperties props;
@@ -44,7 +45,7 @@ public class OnsConsumerFactory {
             e.printStackTrace();
         }
         cache.put(groupId, consumer);
-        log.info("rocketmq consumer开启成功---------------------------------.");
+        log.info("rocketmq consumer开启成功-------groupId={}----------.", groupId);
         return consumer;
     }
 
@@ -52,7 +53,10 @@ public class OnsConsumerFactory {
         return new MessageListenerConcurrently() {
             @Override
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
+                log.info("进入MessageListenerConcurrently");
+                log.info("msgs长度：{}", msgs.size());
                 MessageExt messageExt = msgs.get(0);
+                log.info("messageExt[0]:{}", messageExt);
                 boolean result = messageHandle.handle(messageExt.getKeys(), new String(messageExt.getBody()));
                 return result ? ConsumeConcurrentlyStatus.CONSUME_SUCCESS : ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
