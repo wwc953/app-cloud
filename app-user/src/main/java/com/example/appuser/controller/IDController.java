@@ -18,7 +18,7 @@ public class IDController {
 
     @GetMapping("/getID/{msg}")
     public String sendOnewayorder(@PathVariable String msg) {
-        return redisService.getID(msg);
+        return redisService.getID(msg, null);
     }
 
 }
