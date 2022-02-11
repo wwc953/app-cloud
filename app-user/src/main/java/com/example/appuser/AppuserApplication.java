@@ -11,7 +11,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableFeignClients
 @EnableSwagger2
 @MapperScan("com.example.appuser.dao")
-@SpringBootApplication(scanBasePackages = {"com.example.appuser", "com.example.apputil.ons"})
+@SpringBootApplication(scanBasePackages = {"com.example.appuser", "com.example.apputil.*"})
 public class AppuserApplication {
 
     public static void main(String[] args) {
