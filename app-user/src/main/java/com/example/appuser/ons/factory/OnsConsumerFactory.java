@@ -58,6 +58,7 @@ public class OnsConsumerFactory {
                 MessageExt messageExt = msgs.get(0);
                 log.info("messageExt[0]:{}", messageExt);
                 boolean result = messageHandle.handle(messageExt.getKeys(), new String(messageExt.getBody()));
+                log.info("result======{}", result);
                 return result ? ConsumeConcurrentlyStatus.CONSUME_SUCCESS : ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
         };
