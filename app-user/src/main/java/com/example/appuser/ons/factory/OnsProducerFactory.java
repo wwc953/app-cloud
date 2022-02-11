@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OnsProducerFactory {
     MqProperties props;
 
+//    ConcurrentHashMap<PRODUCER_TYPE, MQAdmin> cache = new ConcurrentHashMap();
     ConcurrentHashMap<PRODUCER_TYPE, MQAdmin> cache = new ConcurrentHashMap();
 
     public OnsProducerFactory(MqProperties props) {
@@ -31,12 +32,13 @@ public class OnsProducerFactory {
 //        producer.setVipChannelEnabled(false);
 //        producer.setRetryTimesWhenSendAsyncFailed(10);
 //        producer.setProducerGroup("GID-USER");
+        producer.setProducerGroup("default");
         try {
             producer.start();
         } catch (MQClientException e) {
             e.printStackTrace();
         }
-        log.info("rocketmq producer开启成功---------------------------------.");
+        log.info("rocketmq producer 开启成功---------------------------------.");
         cache.put(PRODUCER_TYPE.NORMAL, producer);
         return producer;
     }
