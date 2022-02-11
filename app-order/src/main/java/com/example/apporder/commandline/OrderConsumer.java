@@ -1,5 +1,4 @@
-package com.example.appuser.commandline;
-
+package com.example.apporder.commandline;
 
 import com.example.apputil.ons.api.IConsumerService;
 import com.example.apputil.ons.api.MessageHandle;
@@ -11,17 +10,15 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
 @Component
 @Order(1)
 @Slf4j
-public class UserConsumer implements CommandLineRunner {
+public class OrderConsumer implements CommandLineRunner {
 
-    @Value("${mq.userGroupId}")
-    private String userGroupId;
-    @Value("${mq.userTopic}")
-    private String userTopic;
+    @Value("${mq.orderGroupId}")
+    private String orderGroupId;
+    @Value("${mq.orderTopic}")
+    private String orderTopic;
 
     @Autowired
     IConsumerService iConsumerService;
@@ -29,14 +26,14 @@ public class UserConsumer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         ConsumerInfoEntry infoEntry = new ConsumerInfoEntry();
-        infoEntry.setGroupId(userGroupId);
-        infoEntry.setTopic(userTopic);
+        infoEntry.setGroupId(orderGroupId);
+        infoEntry.setTopic(orderTopic);
 
         iConsumerService.consumerMsg(infoEntry, new MessageHandle() {
             @Override
             public boolean handle(String msgKey, String msg) {
-                log.info("msgKey:{}", msgKey);
-                log.info("msg:{}", msg);
+                log.info("order----->msgKey:{}", msgKey);
+                log.info("order---->msg:{}", msg);
                 return true;
             }
         });

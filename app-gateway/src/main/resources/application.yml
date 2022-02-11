@@ -46,6 +46,10 @@ management:
 response:
   enc: false
 
+request:
+  filter:
+    member: (.*/member/.*)
+
 #hystrix配置
 hystrix:
   command:

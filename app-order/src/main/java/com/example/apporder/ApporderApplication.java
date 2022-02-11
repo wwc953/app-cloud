@@ -7,11 +7,11 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@SpringBootApplication
 @EnableFeignClients
 @EnableDiscoveryClient
 @EnableSwagger2
 @MapperScan("com.example.apporder.dao")
+@SpringBootApplication(scanBasePackages = {"com.example.apporder", "com.example.apputil.ons"})
 public class ApporderApplication {
 
     public static void main(String[] args) {
