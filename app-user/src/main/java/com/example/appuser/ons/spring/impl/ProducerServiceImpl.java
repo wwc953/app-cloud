@@ -2,15 +2,18 @@ package com.example.appuser.ons.spring.impl;
 
 import com.example.appuser.ons.api.IProducerService;
 import com.example.appuser.ons.factory.OnsProducerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.MQProducer;
 import org.apache.rocketmq.common.message.Message;
 
+@Slf4j
 public class ProducerServiceImpl implements IProducerService {
     private String binder;
     private OnsProducerFactory onsFactory;
 
     @Override
     public void sendMsg(String topic, String message, String msgKey) {
+        log.info("发送：topic:{},message:{},msgKey:{}", topic, message, msgKey);
         MQProducer producer = onsFactory.getNormalProducer();
         Message msg = new Message(topic, "Default", message.getBytes());
         msg.setKeys(msgKey);
