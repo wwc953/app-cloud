@@ -81,6 +81,12 @@
             <version>3.15</version>
         </dependency>
 
+<!--        rocketmq-->
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-spring-boot-starter</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
