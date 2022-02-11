@@ -20,12 +20,20 @@ public class MQController {
     @Value("${mq.userTopic}")
     private String userTopic;
 
+    @Value("${mq.orderTopic}")
+    private String orderTopic;
+
     @Autowired
     IProducerService producerService;
 
-    @GetMapping("/sendOneway/{msg}")
+    @GetMapping("/user/sendOneway/{msg}")
     public void sendOneway(@PathVariable String msg) {
         producerService.sendMsg(userTopic, msg, System.currentTimeMillis() + "");
+    }
+
+    @GetMapping("/order/sendOneway/{msg}")
+    public void sendOnewayorder(@PathVariable String msg) {
+        producerService.sendMsg(orderTopic, msg, System.currentTimeMillis() + "");
     }
 
 }
