@@ -30,7 +30,7 @@ public class OnsProducerFactory {
         producer.setNamesrvAddr(props.getNamesrvAddr());
 //        producer.setVipChannelEnabled(false);
 //        producer.setRetryTimesWhenSendAsyncFailed(10);
-        producer.setProducerGroup("GID-USER");
+//        producer.setProducerGroup("GID-USER");
         try {
             producer.start();
         } catch (MQClientException e) {
