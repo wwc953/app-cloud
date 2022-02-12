@@ -43,24 +43,25 @@ public class BaseFeginConfiguration {
             requestTemplate.header(USER_INFO, JsonUtil.convertObjectToJson(null));
             log.info("Fegin中封装了用户信息，uri:{}", requestTemplate.url());
 
-            String resourceName = getRequest().getHeader(RESOURCE_NAME);
-            if (StringUtils.isNotBlank(resourceName)) {
-                try {
-                    requestTemplate.header(RESOURCE_NAME, URLEncoder.encode(resourceName, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
+            //TODO 待定
+//            String resourceName = getRequest().getHeader(RESOURCE_NAME);
+//            if (StringUtils.isNotBlank(resourceName)) {
+//                try {
+//                    requestTemplate.header(RESOURCE_NAME, URLEncoder.encode(resourceName, "UTF-8"));
+//                } catch (UnsupportedEncodingException e) {
+//                    e.printStackTrace();
+//                }
+//            }
 
-            String traceId = (String) Optional.ofNullable(getRequest().getAttribute(TRACE_ID)).orElse("");
-            if (StringUtils.isBlank(traceId)) {
-                traceId = UUID.randomUUID().toString().replaceAll("-", "");
-                Span span = getArmsSpan();
-                if (span != null && StringUtils.isNotBlank(span.getTraceId())) {
-                    traceId = traceId + "," + span.getTraceId();
-                }
-            }
-            requestTemplate.header(TRACE_ID, traceId);
+//            String traceId = (String) Optional.ofNullable(getRequest().getAttribute(TRACE_ID)).orElse("");
+//            if (StringUtils.isBlank(traceId)) {
+//                traceId = UUID.randomUUID().toString().replaceAll("-", "");
+//                Span span = getArmsSpan();
+//                if (span != null && StringUtils.isNotBlank(span.getTraceId())) {
+//                    traceId = traceId + "," + span.getTraceId();
+//                }
+//            }
+//            requestTemplate.header(TRACE_ID, traceId);
         };
 
         log.info("Fegin基础拦截器注册成功。");
