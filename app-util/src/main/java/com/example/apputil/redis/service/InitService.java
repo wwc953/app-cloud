@@ -14,8 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
@@ -25,9 +27,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@Order(10)
 @Service
 @Slf4j
-public class InitService implements ApplicationListener<ApplicationReadyEvent> {
+public class InitService implements CommandLineRunner {
 
     @Autowired
     CaffeineCache cache;
@@ -214,13 +217,18 @@ public class InitService implements ApplicationListener<ApplicationReadyEvent> {
     }
 
     @Override
-    public void onApplicationEvent(ApplicationReadyEvent event) {
+    public void run(String... args) throws Exception {
         init();
-        if ("true".equals(flag)) {
-            threadPoolTaskScheduler.schedule(() -> {
-                init();
-            }, new CronTrigger("0 */15 * * * ?"));//每15分钟同步一次
-        }
     }
+
+//    @Override
+//    public void onApplicationEvent(ApplicationReadyEvent event) {
+//        init();
+//        if ("true".equals(flag)) {
+//            threadPoolTaskScheduler.schedule(() -> {
+//                init();
+//            }, new CronTrigger("0 */15 * * * ?"));//每15分钟同步一次
+//        }
+//    }
 
 }
