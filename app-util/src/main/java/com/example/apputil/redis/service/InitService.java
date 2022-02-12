@@ -56,6 +56,7 @@ public class InitService implements ApplicationListener<ApplicationReadyEvent> {
 //        List<SnoSt> snoStList = dao.selectAll();
         String str = signerFeign.selectAll();
         log.info("all SnoSt....{}", str);
+        if (str == null) return;
         List<SnoSt> snoStList = JsonUtil.convertJsonToObject(str, new TypeReference<List<SnoSt>>() {
         });
         snoStList.forEach(v -> {
