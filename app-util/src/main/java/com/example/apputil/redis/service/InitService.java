@@ -7,6 +7,7 @@ import com.example.apputil.redis.bean.SnoSt;
 import com.example.apputil.redis.cache.CaffeineCache;
 import com.example.apputil.redis.dao.SnoStMapper;
 import com.example.apputil.redis.util.Constants;
+import com.example.apputil.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,7 @@ public class InitService implements ApplicationListener<ApplicationReadyEvent> {
     public void init() {
         log.info("reflash配置....");
         List<SnoSt> snoStList = dao.selectAll();
+        log.info("all SnoSt....{}", JsonUtil.convertObjectToJson(snoStList));
         snoStList.forEach(v -> {
             NumberStrategy numberStrategy = new NumberStrategy();
             BeanUtils.copyProperties(v, numberStrategy);
