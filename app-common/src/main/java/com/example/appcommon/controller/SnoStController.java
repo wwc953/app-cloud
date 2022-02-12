@@ -23,6 +23,7 @@ public class SnoStController {
 
     @PostMapping("/selectAll")
     public String selectAll() {
+        log.info("server selectAll: begin");
         List<SnoSt> snoSts = signerService.selectAll();
         String res = JsonUtil.convertObjectToJson(snoSts);
         log.info("server selectAll: {}", res);
