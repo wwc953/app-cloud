@@ -122,12 +122,12 @@ public class InitService implements ApplicationListener<ApplicationReadyEvent> {
             param.put("currentTime", new Date());
             try {
 //                String sql = "update sno_st set cur_Value=:cur_Value ,cur_Date=:currentTime where st_No=:st_no and cur_Date<:currentTime";
-                System.out.println("更新数据：" + JSON.toJSONString(param));
+                log.info("更新数据：" + JSON.toJSONString(param));
                 dao.synUpdate(param);
-                System.out.println("同步策略当前值成功,策略编号" + stNo + "，当前值：" + currentId);
+                log.info("同步策略当前值成功,策略编号" + stNo + "，当前值：" + currentId);
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("同步策略当前值失败！！！,策略编号" + stNo + "，当前值：" + currentId);
+                log.info("同步策略当前值失败！！！,策略编号" + stNo + "，当前值：" + currentId);
             }
 
         });
