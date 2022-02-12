@@ -289,6 +289,9 @@ public class LocalCacheID {
         if (isHex) {
             param.put("hex", "1");
         }
+        if (feign == null) {
+            log.info("fegin is null");
+        }
         String rsdata = Optional.of(feign.batchGenerateId(param)).get();
         Map rsMap = JSON.parseObject(rsdata, Map.class);
         return rsMap;

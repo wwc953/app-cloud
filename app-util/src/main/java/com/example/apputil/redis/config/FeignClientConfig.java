@@ -35,13 +35,14 @@ public class FeignClientConfig {
     private RequestInterceptor baseInterceptor;
 
     @Bean
-    public SignerFeign signerFeign(Contract contract, Decoder decoder, Encoder encoder, ErrorDecoder errorDecoder) {
+    public SignerFeign signerFeign(Decoder decoder, Encoder encoder, ErrorDecoder errorDecoder) {
         return HystrixFeign.builder().contract(new SpringMvcContract())
                 .encoder(encoder)
-                .client(this.feignClient)
+                .decoder(decoder)
                 .errorDecoder(errorDecoder)
-                .retryer(Retryer.NEVER_RETRY)
+                .client(this.feignClient)
                 .requestInterceptor(baseInterceptor)
+                .retryer(Retryer.NEVER_RETRY)
                 .target(SignerFeign.class, "http://" + this.signerName + "/", new SignerFeignFallBack());
     }
 }
