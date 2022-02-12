@@ -6,6 +6,7 @@ import com.example.apputil.redis.bean.NumberStrategy;
 import com.example.apputil.redis.bean.SnoSt;
 import com.example.apputil.redis.cache.CaffeineCache;
 import com.example.apputil.redis.dao.SnoStMapper;
+import com.example.apputil.redis.remote.SignerFeign;
 import com.example.apputil.redis.util.Constants;
 import com.example.apputil.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +31,11 @@ public class InitService implements ApplicationListener<ApplicationReadyEvent> {
     @Autowired
     CaffeineCache cache;
 
+//    @Autowired
+//    SnoStMapper dao;
+
     @Autowired
-    SnoStMapper dao;
+    SignerFeign signerFeign;
 
     @Autowired
     IRedisService redisService;
@@ -48,7 +52,8 @@ public class InitService implements ApplicationListener<ApplicationReadyEvent> {
 
     public void init() {
         log.info("reflash配置....");
-        List<SnoSt> snoStList = dao.selectAll();
+//        List<SnoSt> snoStList = dao.selectAll();
+        List<SnoSt> snoStList = signerFeign.selectAll();
         log.info("all SnoSt....{}", JsonUtil.convertObjectToJson(snoStList));
         snoStList.forEach(v -> {
             NumberStrategy numberStrategy = new NumberStrategy();
@@ -125,7 +130,7 @@ public class InitService implements ApplicationListener<ApplicationReadyEvent> {
             try {
 //                String sql = "update sno_st set cur_Value=:cur_Value ,cur_Date=:currentTime where st_No=:st_no and cur_Date<:currentTime";
                 log.info("更新数据：" + JSON.toJSONString(param));
-                dao.synUpdate(param);
+                signerFeign.synUpdate(param);
                 log.info("同步策略当前值成功,策略编号" + stNo + "，当前值：" + currentId);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -1,6 +1,7 @@
 package com.example.appcommon.service;
 
 import com.alibaba.fastjson.JSON;
+import com.example.appcommon.bean.SnoSt;
 import com.example.appcommon.dao.SnoStCommonMapper;
 import com.example.apputil.redis.api.IRedisService;
 import lombok.extern.slf4j.Slf4j;
@@ -9,10 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -110,20 +108,28 @@ public class SignerService {
 
     private void updateDatabase(String stNo, long currentId) {
 //        threadPoolTaskScheduler.execute(() -> {
-            Map<String, Object> param = new HashMap<>();
-            param.put("stNo", stNo);
-            param.put("curValue", currentId);
-            param.put("currentTime", new Date());
-            try {
+        Map<String, Object> param = new HashMap<>();
+        param.put("stNo", stNo);
+        param.put("curValue", currentId);
+        param.put("currentTime", new Date());
+        try {
 //                String sql = "update sno_st set cur_Value=:cur_Value ,cur_Date=:currentTime where st_No=:st_no and cur_Date<:currentTime";
-                log.info("更新数据：" + JSON.toJSONString(param));
-                dao.synUpdate(param);
-                log.info("同步策略当前值成功,策略编号" + stNo + "，当前值：" + currentId);
-            } catch (Exception e) {
-                e.printStackTrace();
-                log.info("同步策略当前值失败！！！,策略编号" + stNo + "，当前值：" + currentId);
-            }
+            log.info("更新数据：" + JSON.toJSONString(param));
+            dao.synUpdate(param);
+            log.info("同步策略当前值成功,策略编号" + stNo + "，当前值：" + currentId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("同步策略当前值失败！！！,策略编号" + stNo + "，当前值：" + currentId);
+        }
 
 //        });
+    }
+
+    public List<SnoSt> selectAll() {
+        return dao.selectAll();
+    }
+
+    public Integer synUpdate(Map map) {
+        return dao.synUpdate(map);
     }
 }
