@@ -1,7 +1,7 @@
 package com.example.appcommon.service;
 
 import com.alibaba.fastjson.JSON;
-import com.example.appcommon.dao.SnoStMapper;
+import com.example.appcommon.dao.SnoStCommonMapper;
 import com.example.apputil.redis.api.IRedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class SignerService {
     IRedisService redisService;
 
     @Autowired
-    SnoStMapper dao;
+    SnoStCommonMapper dao;
 
     public Long generateId(Map map) {
         String genType = (String) Optional.ofNullable(map.get("genType")).orElse(1);

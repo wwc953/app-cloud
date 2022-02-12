@@ -5,7 +5,7 @@ import com.example.appcommon.bean.SnoSt;
 import java.util.List;
 import java.util.Map;
 
-public interface SnoStMapper {
+public interface SnoStCommonMapper {
 
     int insert(SnoSt record);
 

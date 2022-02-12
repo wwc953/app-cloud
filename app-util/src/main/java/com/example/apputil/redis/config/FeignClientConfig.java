@@ -27,7 +27,7 @@ public class FeignClientConfig {
     Client feignClient;
 
 //    @Value("${frame.signer.application.name:xxx-xx-signer-subdomain}")
-    @Value("${frame.signer.application.name:app-user}")
+    @Value("${frame.signer.application.name:app-common}")
     private String signerName;
 
     @Autowired

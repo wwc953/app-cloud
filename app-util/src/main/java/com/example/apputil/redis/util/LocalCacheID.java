@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.apputil.redis.bean.NumberStrategy;
 import com.example.apputil.redis.cache.CaffeineCache;
 import com.example.apputil.redis.remote.SignerFeign;
-import com.example.apputil.redis.service.InitService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
