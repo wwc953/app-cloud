@@ -289,6 +289,7 @@ public class LocalCacheID {
         if (isHex) {
             param.put("hex", "1");
         }
+        log.info("getPendingMapWithFeign -- st: {}",JSONObject.toJSONString(st));
         if (feign == null) {
             log.info("fegin is null");
         }
