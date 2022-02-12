@@ -15,7 +15,7 @@ public interface SignerFeign {
     Long generateId(@RequestBody Map map);
 
     @PostMapping("/member/snost/selectAll")
-    List<SnoSt> selectAll();
+    String selectAll();
 
     @PostMapping("/member/snost/synUpdate")
     String synUpdate(Map param);

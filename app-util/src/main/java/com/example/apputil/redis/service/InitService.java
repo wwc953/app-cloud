@@ -9,6 +9,7 @@ import com.example.apputil.redis.dao.SnoStMapper;
 import com.example.apputil.redis.remote.SignerFeign;
 import com.example.apputil.redis.util.Constants;
 import com.example.apputil.utils.JsonUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +54,10 @@ public class InitService implements ApplicationListener<ApplicationReadyEvent> {
     public void init() {
         log.info("reflash配置....");
 //        List<SnoSt> snoStList = dao.selectAll();
-        List<SnoSt> snoStList = signerFeign.selectAll();
-        log.info("all SnoSt....{}", JsonUtil.convertObjectToJson(snoStList));
+        String str = signerFeign.selectAll();
+        log.info("all SnoSt....{}", str);
+        List<SnoSt> snoStList = JsonUtil.convertJsonToObject(str, new TypeReference<List<SnoSt>>() {
+        });
         snoStList.forEach(v -> {
             NumberStrategy numberStrategy = new NumberStrategy();
             BeanUtils.copyProperties(v, numberStrategy);

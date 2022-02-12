@@ -17,7 +17,7 @@ public class SignerFeignFallBack implements SignerFeign {
     }
 
     @Override
-    public List<SnoSt> selectAll() {
+    public String selectAll() {
         return null;
     }
 
