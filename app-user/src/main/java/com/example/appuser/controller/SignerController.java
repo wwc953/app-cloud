@@ -1,6 +1,7 @@
 package com.example.appuser.controller;
 
 import com.example.apputil.redis.service.InitService;
+import com.example.apputil.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,10 @@ public class SignerController {
 
     @PostMapping("/batchGenerateId")
     public String batchGenerateId(@RequestBody Map map) {
-        return initService.batchGenerateId(map);
+        log.info("controller batchGenerateId入参：{}", JsonUtil.convertObjectToJson(map));
+        String result = initService.batchGenerateId(map);
+        log.info("result:{}", result);
+        return result;
     }
 
 }
