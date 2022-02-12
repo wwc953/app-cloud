@@ -23,4 +23,9 @@ public class SignerController {
         return initService.generateId(map);
     }
 
+    @PostMapping("/batchGenerateId")
+    public String batchGenerateId(@RequestBody Map map) {
+        return initService.batchGenerateId(map);
+    }
+
 }

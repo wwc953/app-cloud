@@ -86,7 +86,7 @@ public class InitService implements ApplicationListener<ApplicationReadyEvent> {
         Integer count = (Integer) Optional.ofNullable(map.get("count")).orElse(0);
 
         if (count == 0) {
-            System.out.println("未传入次数参数，根据编号长度获取");
+            log.info("未传入次数参数，根据编号长度获取");
             if (noLength <= 5) {
                 throw new RuntimeException("流水号长度小于5，调用单次获取接口");
             }
