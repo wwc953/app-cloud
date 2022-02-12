@@ -1,8 +1,6 @@
 package com.example.appcommon.controller;
 
-import com.example.appcommon.bean.SnoSt;
 import com.example.appcommon.service.SignerService;
-import com.example.apputil.redis.service.InitService;
 import com.example.apputil.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
