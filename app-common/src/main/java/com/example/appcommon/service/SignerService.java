@@ -128,7 +128,6 @@ public class SignerService {
 
     public List<SnoSt> selectAll() {
         List<SnoSt> snoSts = dao.selectAll();
-        log.info("server selectAll: {}", JsonUtil.convertObjectToJson(snoSts));
         return snoSts;
     }
 

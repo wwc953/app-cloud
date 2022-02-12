@@ -22,8 +22,11 @@ public class SnoStController {
     SignerService signerService;
 
     @PostMapping("/selectAll")
-    public List<SnoSt> selectAll() {
-        return signerService.selectAll();
+    public String selectAll() {
+        List<SnoSt> snoSts = signerService.selectAll();
+        String res = JsonUtil.convertObjectToJson(snoSts);
+        log.info("server selectAll: {}", res);
+        return res;
     }
 
     @PostMapping("/synUpdate")
