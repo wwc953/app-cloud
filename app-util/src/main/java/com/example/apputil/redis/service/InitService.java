@@ -1,25 +1,21 @@
 package com.example.apputil.redis.service;
 
 import com.alibaba.fastjson.JSON;
+import com.example.appstaticutil.json.JsonUtil;
 import com.example.apputil.redis.api.IRedisService;
 import com.example.apputil.redis.bean.NumberStrategy;
 import com.example.apputil.redis.bean.SnoSt;
 import com.example.apputil.redis.cache.CaffeineCache;
-import com.example.apputil.redis.dao.SnoStMapper;
 import com.example.apputil.redis.remote.SignerFeign;
 import com.example.apputil.redis.util.Constants;
-import com.example.apputil.utils.JsonUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

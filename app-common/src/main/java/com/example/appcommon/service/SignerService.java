@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.example.appcommon.bean.SnoSt;
 import com.example.appcommon.dao.SnoStCommonMapper;
 import com.example.apputil.redis.api.IRedisService;
-import com.example.apputil.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

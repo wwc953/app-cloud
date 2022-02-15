@@ -1,4 +1,4 @@
-package com.example.apputil.utils;
+package com.example.apputil.bean;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

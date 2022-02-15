@@ -34,6 +34,7 @@
         <module>app-gateway</module>
         <module>app-common</module>
         <module>app-util</module>
+        <module>app-static-util</module>
     </modules>
 
     <dependencyManagement>

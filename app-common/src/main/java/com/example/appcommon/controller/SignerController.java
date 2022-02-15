@@ -1,7 +1,7 @@
 package com.example.appcommon.controller;
 
 import com.example.appcommon.service.SignerService;
-import com.example.apputil.utils.JsonUtil;
+import com.example.appstaticutil.json.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

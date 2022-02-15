@@ -1,7 +1,7 @@
 package com.example.appuser.controller;
 
+import com.example.appstaticutil.json.JsonUtil;
 import com.example.apputil.redis.service.InitService;
-import com.example.apputil.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

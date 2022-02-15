@@ -1,8 +1,8 @@
 package com.example.apputil.redis.feign;
 
+import com.example.appstaticutil.encry.MD5Utils;
+import com.example.appstaticutil.json.JsonUtil;
 import com.example.apputil.redis.cache.CaffeineCache;
-import com.example.apputil.utils.JsonUtil;
-import com.example.apputil.utils.MD5Utils;
 import com.google.gson.JsonArray;
 import com.jayway.jsonpath.*;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;

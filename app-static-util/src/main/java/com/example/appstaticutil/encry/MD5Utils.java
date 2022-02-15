@@ -1,4 +1,4 @@
-package com.example.apputil.utils;
+package com.example.appstaticutil.encry;
 
 import java.security.MessageDigest;
 

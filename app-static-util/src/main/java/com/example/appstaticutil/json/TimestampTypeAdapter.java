@@ -1,4 +1,4 @@
-package com.example.apputil.utils;
+package com.example.appstaticutil.json;
 
 import com.google.gson.*;
 
