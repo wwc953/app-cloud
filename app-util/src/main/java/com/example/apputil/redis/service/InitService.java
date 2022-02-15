@@ -5,7 +5,7 @@ import com.example.appstaticutil.json.JsonUtil;
 import com.example.apputil.redis.api.IRedisService;
 import com.example.apputil.redis.bean.NumberStrategy;
 import com.example.apputil.redis.bean.SnoSt;
-import com.example.apputil.redis.cache.CaffeineCache;
+import com.example.apputil.cache.CaffeineCache;
 import com.example.apputil.redis.remote.SignerFeign;
 import com.example.apputil.redis.util.Constants;
 import com.fasterxml.jackson.core.type.TypeReference;

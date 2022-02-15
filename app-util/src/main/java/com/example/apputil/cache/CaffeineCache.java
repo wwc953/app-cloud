@@ -1,4 +1,4 @@
-package com.example.apputil.redis.cache;
+package com.example.apputil.cache;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;

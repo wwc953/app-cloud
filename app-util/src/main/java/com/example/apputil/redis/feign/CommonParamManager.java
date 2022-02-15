@@ -1,6 +1,6 @@
 package com.example.apputil.redis.feign;
 
-import com.example.apputil.redis.cache.CaffeineCache;
+import com.example.apputil.cache.CaffeineCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
