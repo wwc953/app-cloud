@@ -1,8 +1,8 @@
 package com.example.apputil.redis.feign;
 
+import com.example.appstaticutil.bean.Span;
+import com.example.appstaticutil.bean.Tracer;
 import com.example.appstaticutil.json.JsonUtil;
-import com.example.apputil.bean.Span;
-import com.example.apputil.bean.Tracer;
 import feign.RequestInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

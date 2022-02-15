@@ -1,11 +1,11 @@
-package com.example.apputil.bean;
+package com.example.appstaticutil.bean;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class Tracer {
-    public static Tracer.Builder builder() {
-        return new Tracer.Builder();
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {

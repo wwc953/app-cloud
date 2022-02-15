@@ -1,4 +1,4 @@
-package com.example.apputil.bean;
+package com.example.appstaticutil.bean;
 
 import java.util.HashMap;
 import java.util.Map;
