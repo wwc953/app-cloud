@@ -11,7 +11,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableDiscoveryClient
 @EnableSwagger2
 @MapperScan("com.example.apporder.dao")
-//@SpringBootApplication(scanBasePackages = {"com.example.apporder", "com.example.apputil.ons"})
 @SpringBootApplication(scanBasePackages = {"com.example.apporder"})
 public class ApporderApplication {
 
