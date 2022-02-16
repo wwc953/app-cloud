@@ -1,5 +1,10 @@
 package com.example.apputil.ons.bean;
 
+import com.example.apputil.ons.constant.MqConstant;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+
+@Slf4j
 public class MqProperties {
     private String binder;
     private String accessKey;
@@ -90,5 +95,32 @@ public class MqProperties {
 
     public void setRedisMsgConsumeTimeout(String redisMsgConsumeTimeout) {
         this.redisMsgConsumeTimeout = redisMsgConsumeTimeout;
+    }
+
+    public boolean hasNullProperties() {
+        boolean flag = false;
+        if (MqConstant.BINDER_ONS.equalsIgnoreCase(binder)) {
+            if (StringUtils.isBlank(accessKey)) {
+                log.error("accessKey is null");
+                return true;
+            }
+            if (StringUtils.isBlank(secretKey)) {
+                log.error("secretKey is null");
+                return true;
+            }
+            if (StringUtils.isBlank(sendMsgTimeoutMillis)) {
+                log.error("sendMsgTimeoutMillis is null");
+                return true;
+            }
+            if (StringUtils.isBlank(namesrvAddr)) {
+                log.error("namesrvAddr is null");
+                return true;
+            }
+        }
+        if (MqConstant.BINDER_KAFKA.equalsIgnoreCase(binder) && StringUtils.isBlank(connect)) {
+            log.error("connect is null");
+            return true;
+        }
+        return flag;
     }
 }

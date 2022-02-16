@@ -1,6 +1,8 @@
 package com.example.apputil.ons.spring.impl;
 
 import com.example.apputil.ons.api.IProducerService;
+import com.example.apputil.ons.constant.MqConstant;
+import com.example.apputil.ons.factory.KafkaProducerFactory;
 import com.example.apputil.ons.factory.OnsProducerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.MQProducer;
@@ -10,12 +12,13 @@ import org.apache.rocketmq.common.message.Message;
 public class ProducerServiceImpl implements IProducerService {
     private String binder;
     private OnsProducerFactory onsFactory;
+    private KafkaProducerFactory kafkaFactory;
 
     @Override
     public void sendMsg(String topic, String message, String msgKey) {
         log.info("发送：topic:{},message:{},msgKey:{}", topic, message, msgKey);
         MQProducer producer = onsFactory.getNormalProducer();
-        Message msg = new Message(topic, "Default", message.getBytes());
+        Message msg = new Message(topic, MqConstant.DEFAULT_TAG, message.getBytes());
         msg.setKeys(msgKey);
         try {
             producer.sendOneway(msg);
@@ -38,5 +41,13 @@ public class ProducerServiceImpl implements IProducerService {
 
     public void setOnsFactory(OnsProducerFactory onsFactory) {
         this.onsFactory = onsFactory;
+    }
+
+    public KafkaProducerFactory getKafkaFactory() {
+        return kafkaFactory;
+    }
+
+    public void setKafkaFactory(KafkaProducerFactory kafkaFactory) {
+        this.kafkaFactory = kafkaFactory;
     }
 }

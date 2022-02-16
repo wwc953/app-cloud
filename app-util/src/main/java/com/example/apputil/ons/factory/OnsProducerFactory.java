@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OnsProducerFactory {
     MqProperties props;
 
-//    ConcurrentHashMap<PRODUCER_TYPE, MQAdmin> cache = new ConcurrentHashMap();
     ConcurrentHashMap<PRODUCER_TYPE, MQAdmin> cache = new ConcurrentHashMap();
 
     public OnsProducerFactory(MqProperties props) {
@@ -29,9 +28,6 @@ public class OnsProducerFactory {
     private MQProducer createNormalProducer() {
         DefaultMQProducer producer = new DefaultMQProducer();
         producer.setNamesrvAddr(props.getNamesrvAddr());
-//        producer.setVipChannelEnabled(false);
-//        producer.setRetryTimesWhenSendAsyncFailed(10);
-//        producer.setProducerGroup("GID-USER");
         producer.setProducerGroup("default");
         try {
             producer.start();

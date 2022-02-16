@@ -4,6 +4,9 @@ package com.example.apputil.ons.config;
 import com.example.apputil.ons.api.IConsumerService;
 import com.example.apputil.ons.api.IProducerService;
 import com.example.apputil.ons.bean.MqProperties;
+import com.example.apputil.ons.constant.MqConstant;
+import com.example.apputil.ons.factory.KafkaConsumerFactory;
+import com.example.apputil.ons.factory.KafkaProducerFactory;
 import com.example.apputil.ons.factory.OnsConsumerFactory;
 import com.example.apputil.ons.factory.OnsProducerFactory;
 import com.example.apputil.ons.spring.impl.ConsumerServiceImpl;
@@ -30,9 +33,13 @@ public class MqConfiguration {
     public IConsumerService consumerService() {
         ConsumerServiceImpl consumerService = new ConsumerServiceImpl();
         String binder = getMqProps().getBinder();
-        if ("ons".equals(binder)) {
-            consumerService.setBinder("ons");
+        if (MqConstant.BINDER_ONS.equals(binder)) {
+            consumerService.setBinder(MqConstant.BINDER_ONS);
             consumerService.setOnsFactory(initOnsConsumerFactory());
+        }
+        if (MqConstant.BINDER_KAFKA.equals(binder)) {
+            consumerService.setBinder(MqConstant.BINDER_KAFKA);
+            consumerService.setKafkaFactory(initKafkaConsumerFactory());
         }
         return consumerService;
     }
@@ -42,9 +49,13 @@ public class MqConfiguration {
     public IProducerService producerService() {
         ProducerServiceImpl producerService = new ProducerServiceImpl();
         String binder = getMqProps().getBinder();
-        if ("ons".equals(binder)) {
-            producerService.setBinder("ons");
+        if (MqConstant.BINDER_ONS.equals(binder)) {
+            producerService.setBinder(MqConstant.BINDER_ONS);
             producerService.setOnsFactory(initOnsProducerFactory());
+        }
+        if (MqConstant.BINDER_KAFKA.equalsIgnoreCase(binder)) {
+            producerService.setBinder(MqConstant.BINDER_KAFKA);
+            producerService.setKafkaFactory(initKafkaProducerFactory());
         }
         return producerService;
     }
@@ -59,5 +70,14 @@ public class MqConfiguration {
         return new OnsProducerFactory(getMqProps());
     }
 
+    @Bean("defaultKafkaConsumerFactory")
+    public KafkaConsumerFactory initKafkaConsumerFactory() {
+        return new KafkaConsumerFactory(getMqProps());
+    }
+
+    @Bean("defaultKafkaProducerFactory")
+    public KafkaProducerFactory initKafkaProducerFactory() {
+        return new KafkaProducerFactory(getMqProps());
+    }
 
 }
