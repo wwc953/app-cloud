@@ -16,7 +16,7 @@ public class KafkaThreadPool {
         executor = new ThreadPoolExecutor(threadNumber, threadNumber, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100), new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
-    private static KafkaThreadPool getInstance() {
+    public static KafkaThreadPool getInstance() {
         if (singleInstance == null) {
             synchronized (KafkaThreadPool.class) {
                 if (singleInstance == null) {
