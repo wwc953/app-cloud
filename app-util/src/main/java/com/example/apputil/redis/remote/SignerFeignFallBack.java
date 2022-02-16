@@ -1,14 +1,13 @@
 package com.example.apputil.redis.remote;
 
-import com.example.apputil.redis.bean.SnoSt;
-
-import java.util.List;
 import java.util.Map;
 
 public class SignerFeignFallBack implements SignerFeign {
+    public static String ERROR_RES = "远程调用异常";
+
     @Override
     public String batchGenerateId(Map map) {
-        return null;
+        return ERROR_RES;
     }
 
     @Override
@@ -18,11 +17,11 @@ public class SignerFeignFallBack implements SignerFeign {
 
     @Override
     public String selectAll() {
-        return null;
+        return ERROR_RES;
     }
 
     @Override
     public String synUpdate(Map param) {
-        return null;
+        return ERROR_RES;
     }
 }
