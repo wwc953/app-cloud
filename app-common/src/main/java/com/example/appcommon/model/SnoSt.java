@@ -1,5 +1,7 @@
 package com.example.appcommon.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class SnoSt {
@@ -15,6 +17,7 @@ public class SnoSt {
 
     private Long noLength;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date curDate;
 
     private Long initValue;
