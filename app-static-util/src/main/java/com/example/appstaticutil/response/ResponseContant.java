@@ -8,5 +8,5 @@ public class ResponseContant {
     /**
      * 连接超时提示信息
      */
-    public static final String FAILMSG = "连接超时，稍后重试";
+    public static final String TIME_OUT_MSG = "连接超时，稍后重试";
 }

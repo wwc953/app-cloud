@@ -21,7 +21,7 @@ public class SignerFeignFallBack implements SignerFeign {
 
     @Override
     public String selectAll() {
-        return JsonUtil.convertObjectToJson(ResponseResult.fail(ResponseContant.FAIL, ResponseContant.FAILMSG));
+        return JsonUtil.convertObjectToJson(ResponseResult.fail(ResponseContant.FAIL, ResponseContant.TIME_OUT_MSG));
     }
 
     @Override
