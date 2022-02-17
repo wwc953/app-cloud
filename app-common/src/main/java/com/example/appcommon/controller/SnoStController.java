@@ -3,6 +3,7 @@ package com.example.appcommon.controller;
 import com.example.appcommon.model.SnoSt;
 import com.example.appcommon.service.SignerService;
 import com.example.appstaticutil.json.JsonUtil;
+import com.example.appstaticutil.response.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,12 +22,11 @@ public class SnoStController {
     SignerService signerService;
 
     @PostMapping("/selectAll")
-    public String selectAll() {
-        log.info("server selectAll: begin");
+    public ResponseResult<List<SnoSt>> selectAll() {
         List<SnoSt> snoSts = signerService.selectAll();
         String res = JsonUtil.convertObjectToJson(snoSts);
         log.info("server selectAll: {}", res);
-        return res;
+        return ResponseResult.success(snoSts);
     }
 
     @PostMapping("/synUpdate")

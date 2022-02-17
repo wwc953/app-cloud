@@ -1,5 +1,9 @@
 package com.example.apputil.redis.remote;
 
+import com.example.appstaticutil.json.JsonUtil;
+import com.example.appstaticutil.response.ResponseContant;
+import com.example.appstaticutil.response.ResponseResult;
+
 import java.util.Map;
 
 public class SignerFeignFallBack implements SignerFeign {
@@ -17,7 +21,7 @@ public class SignerFeignFallBack implements SignerFeign {
 
     @Override
     public String selectAll() {
-        return ERROR_RES;
+        return JsonUtil.convertObjectToJson(ResponseResult.fail(ResponseContant.FAIL, ResponseContant.FAILMSG));
     }
 
     @Override

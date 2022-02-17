@@ -2,6 +2,7 @@ package com.example.apputil.redis.service;
 
 import com.alibaba.fastjson.JSON;
 import com.example.appstaticutil.json.JsonUtil;
+import com.example.appstaticutil.response.ResponseResult;
 import com.example.apputil.redis.api.IRedisService;
 import com.example.apputil.redis.model.NumberStrategy;
 import com.example.apputil.redis.model.SnoSt;
@@ -52,13 +53,11 @@ public class InitService implements CommandLineRunner {
 
     public void init() {
         log.info("reflash配置....");
-//        List<SnoSt> snoStList = dao.selectAll();
         String str = signerFeign.selectAll();
         log.info("all SnoSt....{}", str);
-        if (str == null) return;
-        List<SnoSt> snoStList = JsonUtil.convertJsonToObject(str, new TypeReference<List<SnoSt>>() {
+        ResponseResult<List<SnoSt>> snoStList = JsonUtil.convertJsonToObject(str, new TypeReference<ResponseResult<List<SnoSt>>>() {
         });
-        snoStList.forEach(v -> {
+        snoStList.getData().forEach(v -> {
             NumberStrategy numberStrategy = new NumberStrategy();
             BeanUtils.copyProperties(v, numberStrategy);
             numberStrategy.setStep(v.getSnoStStep());
