@@ -2,6 +2,7 @@ package com.example.apputil.redis.service;
 
 import com.alibaba.fastjson.JSON;
 import com.example.appstaticutil.json.JsonUtil;
+import com.example.appstaticutil.response.ResponseContant;
 import com.example.appstaticutil.response.ResponseResult;
 import com.example.apputil.redis.api.IRedisService;
 import com.example.apputil.redis.model.NumberStrategy;
@@ -11,6 +12,7 @@ import com.example.apputil.redis.remote.SignerFeign;
 import com.example.apputil.redis.util.Constants;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +25,8 @@ import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import static java.lang.Thread.sleep;
 
 @Order(10)
 @Service
@@ -55,14 +59,16 @@ public class InitService implements CommandLineRunner {
         log.info("reflash配置....");
         String str = signerFeign.selectAll();
         log.info("all SnoSt....{}", str);
-        ResponseResult<List<SnoSt>> snoStList = JsonUtil.convertJsonToObject(str, new TypeReference<ResponseResult<List<SnoSt>>>() {
+        ResponseResult<List<SnoSt>> responseResult = JsonUtil.convertJsonToObject(str, new TypeReference<ResponseResult<List<SnoSt>>>() {
         });
-        snoStList.getData().forEach(v -> {
-            NumberStrategy numberStrategy = new NumberStrategy();
-            BeanUtils.copyProperties(v, numberStrategy);
-            numberStrategy.setStep(v.getSnoStStep());
-            cache.hset(Constants.NO_STRATEGY_IN_REDIS, v.getStNo(), numberStrategy);
-        });
+        if (ResponseContant.SUCCESS.equals(responseResult.getCode()) && CollectionUtils.isNotEmpty(responseResult.getData())) {
+            responseResult.getData().forEach(v -> {
+                NumberStrategy numberStrategy = new NumberStrategy();
+                BeanUtils.copyProperties(v, numberStrategy);
+                numberStrategy.setStep(v.getSnoStStep());
+                cache.hset(Constants.NO_STRATEGY_IN_REDIS, v.getStNo(), numberStrategy);
+            });
+        }
         cache.put(Constants.DATA_CENTER_ID, "32");
     }
 
@@ -213,7 +219,15 @@ public class InitService implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        init();
+        threadPoolTaskScheduler.execute(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            init();
+        });
+
     }
 
 //    @Override
