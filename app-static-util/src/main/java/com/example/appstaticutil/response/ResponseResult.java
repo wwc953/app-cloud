@@ -9,6 +9,10 @@ public class ResponseResult<T> implements Serializable {
     private long total;
     private String traceID;
 
+    public ResponseResult() {
+
+    }
+
     public ResponseResult(T data) {
         this(ResponseContant.SUCCESS, "success", data);
     }
