@@ -1,4 +1,4 @@
-package com.example.apputil.ons.bean;
+package com.example.apputil.ons.model;
 
 public class ConsumerInfoEntry {
     private String groupId;

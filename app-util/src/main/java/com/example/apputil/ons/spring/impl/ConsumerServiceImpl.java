@@ -2,7 +2,7 @@ package com.example.apputil.ons.spring.impl;
 
 import com.example.apputil.ons.api.IConsumerService;
 import com.example.apputil.ons.api.MessageHandle;
-import com.example.apputil.ons.bean.ConsumerInfoEntry;
+import com.example.apputil.ons.model.ConsumerInfoEntry;
 import com.example.apputil.ons.constant.MqConstant;
 import com.example.apputil.ons.factory.KafkaConsumerFactory;
 import com.example.apputil.ons.factory.OnsConsumerFactory;

@@ -1,7 +1,7 @@
 package com.example.appcommon.service;
 
 import com.alibaba.fastjson.JSON;
-import com.example.appcommon.bean.SnoSt;
+import com.example.appcommon.model.SnoSt;
 import com.example.appcommon.dao.SnoStCommonMapper;
 import com.example.apputil.redis.api.IRedisService;
 import lombok.extern.slf4j.Slf4j;

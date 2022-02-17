@@ -1,4 +1,4 @@
-package com.example.apputil.redis.bean;
+package com.example.appcommon.model;
 
 import java.util.Date;
 

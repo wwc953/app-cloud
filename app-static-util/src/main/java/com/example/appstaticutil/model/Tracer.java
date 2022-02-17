@@ -1,4 +1,4 @@
-package com.example.appstaticutil.bean;
+package com.example.appstaticutil.model;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -1,4 +1,4 @@
-package com.example.apputil.ons.bean;
+package com.example.apputil.ons.model;
 
 import com.example.apputil.ons.constant.MqConstant;
 import lombok.extern.slf4j.Slf4j;

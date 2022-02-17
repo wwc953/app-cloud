@@ -1,7 +1,7 @@
 package com.example.apputil.redis.feign;
 
-import com.example.appstaticutil.bean.Span;
-import com.example.appstaticutil.bean.Tracer;
+import com.example.appstaticutil.model.Span;
+import com.example.appstaticutil.model.Tracer;
 import com.example.appstaticutil.json.JsonUtil;
 import feign.RequestInterceptor;
 import lombok.extern.slf4j.Slf4j;

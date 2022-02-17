@@ -1,6 +1,6 @@
 package com.example.apputil.ons.factory;
 
-import com.example.apputil.ons.bean.MqProperties;
+import com.example.apputil.ons.model.MqProperties;
 import com.example.apputil.ons.constant.PRODUCER_TYPE;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;

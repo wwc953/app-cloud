@@ -3,7 +3,7 @@ package com.example.apputil.ons.config;
 
 import com.example.apputil.ons.api.IConsumerService;
 import com.example.apputil.ons.api.IProducerService;
-import com.example.apputil.ons.bean.MqProperties;
+import com.example.apputil.ons.model.MqProperties;
 import com.example.apputil.ons.constant.MqConstant;
 import com.example.apputil.ons.factory.KafkaConsumerFactory;
 import com.example.apputil.ons.factory.KafkaProducerFactory;

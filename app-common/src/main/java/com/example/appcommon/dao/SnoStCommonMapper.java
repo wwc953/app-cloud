@@ -1,6 +1,6 @@
 package com.example.appcommon.dao;
 
-import com.example.appcommon.bean.SnoSt;
+import com.example.appcommon.model.SnoSt;
 
 import java.util.List;
 import java.util.Map;

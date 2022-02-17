@@ -1,4 +1,4 @@
-package com.example.appstaticutil.bean;
+package com.example.appstaticutil.model;
 
 import java.util.HashMap;
 import java.util.Map;

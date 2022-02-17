@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.appcommon.dao.SnoStCommonMapper" >
-  <resultMap id="BaseResultMap" type="com.example.appcommon.bean.SnoSt" >
+  <resultMap id="BaseResultMap" type="com.example.appcommon.model.SnoSt" >
     <id column="sno_St_ID" property="snoStId" jdbcType="BIGINT" />
     <result column="st_Name" property="stName" jdbcType="VARCHAR" />
     <result column="st_No" property="stNo" jdbcType="VARCHAR" />
@@ -38,7 +38,7 @@
     from sno_st
   </select>
 
-  <insert id="insert" parameterType="com.example.appcommon.bean.SnoSt" >
+  <insert id="insert" parameterType="com.example.appcommon.model.SnoSt" >
     insert into sno_st (sno_St_ID, st_Name, st_No, 
       st_Content, gen_Type, no_Length, 
       cur_Date, init_Value, cur_Value, 
@@ -48,7 +48,7 @@
       #{curDate,jdbcType=TIMESTAMP}, #{initValue,jdbcType=BIGINT}, #{curValue,jdbcType=BIGINT}, 
       #{snoStStep,jdbcType=BIGINT}, #{tenantId,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.example.appcommon.bean.SnoSt" >
+  <insert id="insertSelective" parameterType="com.example.appcommon.model.SnoSt" >
     insert into sno_st
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="snoStId != null" >
@@ -121,7 +121,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.example.appcommon.bean.SnoSt" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.appcommon.model.SnoSt" >
     update sno_st
     <set >
       <if test="stName != null" >
@@ -157,7 +157,7 @@
     </set>
     where sno_St_ID = #{snoStId,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.example.appcommon.bean.SnoSt" >
+  <update id="updateByPrimaryKey" parameterType="com.example.appcommon.model.SnoSt" >
     update sno_st
     set st_Name = #{stName,jdbcType=VARCHAR},
       st_No = #{stNo,jdbcType=VARCHAR},

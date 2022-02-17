@@ -1,6 +1,6 @@
 package com.example.appcommon.controller;
 
-import com.example.appcommon.bean.SnoSt;
+import com.example.appcommon.model.SnoSt;
 import com.example.appcommon.service.SignerService;
 import com.example.appstaticutil.json.JsonUtil;
 import lombok.extern.slf4j.Slf4j;

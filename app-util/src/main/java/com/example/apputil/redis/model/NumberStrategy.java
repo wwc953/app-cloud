@@ -1,37 +1,13 @@
-package com.example.appcommon.bean;
+package com.example.apputil.redis.model;
 
-import java.util.Date;
-
-public class SnoSt {
-    private Long snoStId;
-
+public class NumberStrategy {
     private String stName;
-
     private String stNo;
-
     private String stContent;
-
     private String genType;
-
     private Long noLength;
-
-    private Date curDate;
-
     private Long initValue;
-
-    private Long curValue;
-
-    private Long snoStStep;
-
-    private String tenantId;
-
-    public Long getSnoStId() {
-        return snoStId;
-    }
-
-    public void setSnoStId(Long snoStId) {
-        this.snoStId = snoStId;
-    }
+    private Long step;
 
     public String getStName() {
         return stName;
@@ -73,14 +49,6 @@ public class SnoSt {
         this.noLength = noLength;
     }
 
-    public Date getCurDate() {
-        return curDate;
-    }
-
-    public void setCurDate(Date curDate) {
-        this.curDate = curDate;
-    }
-
     public Long getInitValue() {
         return initValue;
     }
@@ -89,27 +57,11 @@ public class SnoSt {
         this.initValue = initValue;
     }
 
-    public Long getCurValue() {
-        return curValue;
+    public Long getStep() {
+        return step;
     }
 
-    public void setCurValue(Long curValue) {
-        this.curValue = curValue;
-    }
-
-    public Long getSnoStStep() {
-        return snoStStep;
-    }
-
-    public void setSnoStStep(Long snoStStep) {
-        this.snoStStep = snoStStep;
-    }
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
+    public void setStep(Long step) {
+        this.step = step;
     }
 }

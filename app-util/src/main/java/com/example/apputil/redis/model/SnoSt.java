@@ -1,13 +1,37 @@
-package com.example.apputil.redis.bean;
+package com.example.apputil.redis.model;
 
-public class NumberStrategy {
+import java.util.Date;
+
+public class SnoSt {
+    private Long snoStId;
+
     private String stName;
+
     private String stNo;
+
     private String stContent;
+
     private String genType;
+
     private Long noLength;
+
+    private Date curDate;
+
     private Long initValue;
-    private Long step;
+
+    private Long curValue;
+
+    private Long snoStStep;
+
+    private String tenantId;
+
+    public Long getSnoStId() {
+        return snoStId;
+    }
+
+    public void setSnoStId(Long snoStId) {
+        this.snoStId = snoStId;
+    }
 
     public String getStName() {
         return stName;
@@ -49,6 +73,14 @@ public class NumberStrategy {
         this.noLength = noLength;
     }
 
+    public Date getCurDate() {
+        return curDate;
+    }
+
+    public void setCurDate(Date curDate) {
+        this.curDate = curDate;
+    }
+
     public Long getInitValue() {
         return initValue;
     }
@@ -57,11 +89,27 @@ public class NumberStrategy {
         this.initValue = initValue;
     }
 
-    public Long getStep() {
-        return step;
+    public Long getCurValue() {
+        return curValue;
     }
 
-    public void setStep(Long step) {
-        this.step = step;
+    public void setCurValue(Long curValue) {
+        this.curValue = curValue;
+    }
+
+    public Long getSnoStStep() {
+        return snoStStep;
+    }
+
+    public void setSnoStStep(Long snoStStep) {
+        this.snoStStep = snoStStep;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }
