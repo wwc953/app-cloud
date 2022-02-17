@@ -3,7 +3,7 @@ package com.example.apputil.redis.remote;
 import java.util.Map;
 
 public class SignerFeignFallBack implements SignerFeign {
-    public static String ERROR_RES = "{\"msg\":\"远程调用异常\"}";
+    public static String ERROR_RES = null;
 
     @Override
     public String batchGenerateId(Map map) {
