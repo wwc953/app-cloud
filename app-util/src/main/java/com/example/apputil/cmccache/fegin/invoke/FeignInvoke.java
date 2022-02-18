@@ -93,4 +93,9 @@ public class FeignInvoke {
         return list;
     }
 
+    public String getDataCenterId() {
+        String dataCenterId = signerFeign.getDataCenterId();
+        return dataCenterId;
+    }
+
 }

@@ -12,6 +12,7 @@ import com.example.apputil.sync.ISyncService;
 import com.example.apputil.sync.SyncListener;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -78,6 +79,7 @@ public class CommonParamManager {
                 @Override
                 public void recevice(String content) {
                     try {
+                        storeDataCenterId();
                         storeNoStrategy(false);
                     } catch (Exception e) {
                         log.error("写入流水号策略失败", e);
@@ -97,6 +99,7 @@ public class CommonParamManager {
             ThreadPoolManager threadPool = ThreadPoolManager.getInstance();
             threadPool.execute(() -> {
                 try {
+                    storeDataCenterId();
                     storeNoStrategy(false);
                 } catch (Exception e) {
                     log.error("写入流水号策略失败。", e);
@@ -131,6 +134,15 @@ public class CommonParamManager {
             cache.del(REDIS_KEYS);
             cache.put(REDIS_KEYS, redisKeys);
         }
+    }
+
+    /**
+     * 存储中心id
+     */
+    public static void storeDataCenterId() {
+        String dataCenterId = feignInvoke.getDataCenterId();
+        log.info("dataCenterId ===> {}", dataCenterId);
+        cache.put(CmcConstants.DATA_CENTER_ID, dataCenterId);
     }
 
     public static String getAppName() {

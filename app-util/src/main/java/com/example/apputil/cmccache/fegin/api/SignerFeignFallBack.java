@@ -28,4 +28,9 @@ public class SignerFeignFallBack implements SignerFeign {
     public String synUpdate(Map param) {
         return ERROR_RES;
     }
+
+    @Override
+    public String getDataCenterId() {
+        return null;
+    }
 }

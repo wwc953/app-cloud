@@ -17,4 +17,7 @@ public interface SignerFeign {
 
     @PostMapping("/member/snost/synUpdate")
     String synUpdate(Map param);
+
+    @PostMapping("/member/centerDataApi/getDataCenterId")
+    String getDataCenterId();
 }
