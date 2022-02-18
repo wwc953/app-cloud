@@ -16,18 +16,12 @@ import java.util.List;
 
 @Slf4j
 @Component
-@ConditionalOnExpression("${frame.cmccache.use:true}")
 public class InitListener {
 
     private static ISyncService syncService;
     private static CaffeineCache cache;
     private static FeignInvoke feignInvoke;
-
     private List<String> types;
-
-    public InitListener(){
-        log.info("初始化InitListener...");
-    }
 
     @Autowired
     public static void setCache(CaffeineCache cache) {
@@ -44,19 +38,7 @@ public class InitListener {
         InitListener.syncService = syncService;
     }
 
-    @Value("${frame.cmccahe.use.type:numberstrategy,rediskeymanager,user,org}")
-    public void setTypes(String type) {
-        try {
-            type = type.replace("_", "").toUpperCase();
-            String[] typeArr = type.split(",");
-            this.types = Arrays.asList(typeArr);
-        } catch (Exception e) {
-            this.types = new ArrayList<>();
-        }
-    }
-
     public static void doListenerInitialize(List<String> types) {
-        log.info("该应用使用的公共缓存类型:{}", String.valueOf(types));
         if (syncService == null) {
             log.error("ISyncService实例注册失败，将不注册公共组件监听");
             return;

@@ -71,7 +71,7 @@ public class InitService implements CommandLineRunner {
 //        }
 //        cache.put(Constants.DATA_CENTER_ID, "32");
 
-        InitListener.doListenerInitialize(Arrays.asList("NUMBERSTRATEGY"));
+//        InitListener.doListenerInitialize(Arrays.asList("NUMBERSTRATEGY"));
 
     }
 
