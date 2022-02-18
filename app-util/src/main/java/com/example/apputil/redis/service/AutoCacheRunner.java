@@ -32,7 +32,7 @@ public class AutoCacheRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("该应用使用的公共缓存类型:{}", String.valueOf(types));
-        InitListener.doListenerInitialize(types);
+        CommonParamManager.doListenerInitialize(types);
 
     }
 }

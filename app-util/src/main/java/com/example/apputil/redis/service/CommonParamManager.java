@@ -6,36 +6,31 @@ import com.example.apputil.sync.ISyncService;
 import com.example.apputil.sync.SyncListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
 @Component
-public class InitListener {
+public class CommonParamManager {
 
     private static ISyncService syncService;
     private static CaffeineCache cache;
     private static FeignInvoke feignInvoke;
-    private List<String> types;
 
     @Autowired
-    public static void setCache(CaffeineCache cache) {
-        InitListener.cache = cache;
+    public void setCache(CaffeineCache cache) {
+        CommonParamManager.cache = cache;
     }
 
     @Autowired
-    public static void setFeignInvoke(FeignInvoke feignInvoke) {
-        InitListener.feignInvoke = feignInvoke;
+    public void setFeignInvoke(FeignInvoke feignInvoke) {
+        CommonParamManager.feignInvoke = feignInvoke;
     }
 
     @Autowired
-    public static void setSyncService(ISyncService syncService) {
-        InitListener.syncService = syncService;
+    public void setSyncService(ISyncService syncService) {
+        CommonParamManager.syncService = syncService;
     }
 
     public static void doListenerInitialize(List<String> types) {
