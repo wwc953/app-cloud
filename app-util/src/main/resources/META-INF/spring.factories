@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.example.apputil.sync.impl.nacos.NacosClientConfig,\
+  com.example.apputil.sync.impl.redis.RedisClientConfig
