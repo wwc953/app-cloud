@@ -57,19 +57,16 @@ public class CommonParamManager {
         Assert.notNull(centerNo, "获取中心编号失败");
     }
 
-    public static void storeRedisKeys(boolean needCheck) {
-        List<RedisManagerObj> redisKeys = feignInvoke.getRedisMgt(appName, needCheck);
-        if (redisKeys != null && redisKeys.size() > 0) {
-            cache.del(REDIS_KEYS);
-            cache.put(REDIS_KEYS, redisKeys);
-        }
-    }
-
     @Autowired
     public void setSyncService(ISyncService syncService) {
         CommonParamManager.syncService = syncService;
     }
 
+    /**
+     * 创建监听实例
+     *
+     * @param types
+     */
     public static void doListenerInitialize(List<String> types) {
         if (syncService == null) {
             log.error("ISyncService实例注册失败，将不注册公共组件监听");
@@ -90,6 +87,11 @@ public class CommonParamManager {
         }
     }
 
+    /**
+     * 执行所有定时任务
+     *
+     * @param types
+     */
     public static void doAllTask(List<String> types) {
         if (types.contains("NUMBERSTRATEGY")) {
             ThreadPoolManager threadPool = ThreadPoolManager.getInstance();
@@ -103,6 +105,11 @@ public class CommonParamManager {
         }
     }
 
+    /**
+     * 存储流水号策略数据
+     *
+     * @param needCheck
+     */
     public static void storeNoStrategy(boolean needCheck) {
         List<NumberStrategy> list = feignInvoke.getNoStList(needCheck);
         if (CollectionUtils.isNotEmpty(list)) {
@@ -118,12 +125,20 @@ public class CommonParamManager {
         }
     }
 
+    public static void storeRedisKeys(boolean needCheck) {
+        List<RedisManagerObj> redisKeys = feignInvoke.getRedisMgt(appName, needCheck);
+        if (redisKeys != null && redisKeys.size() > 0) {
+            cache.del(REDIS_KEYS);
+            cache.put(REDIS_KEYS, redisKeys);
+        }
+    }
 
     public static String getAppName() {
         return appName;
     }
 
     public static String getDataCenterId() {
-        return cache.getString("dataCenterId");
+        String dataCenterId = cache.getString("dataCenterId");
+        return dataCenterId;
     }
 }
