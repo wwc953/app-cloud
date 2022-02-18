@@ -25,6 +25,10 @@ public class InitListener {
 
     private List<String> types;
 
+    public InitListener(){
+        log.info("初始化InitListener...");
+    }
+
     @Autowired
     public static void setCache(CaffeineCache cache) {
         InitListener.cache = cache;
@@ -35,7 +39,7 @@ public class InitListener {
         InitListener.feignInvoke = feignInvoke;
     }
 
-    @Autowired(required = false)
+    @Autowired
     public static void setSyncService(ISyncService syncService) {
         InitListener.syncService = syncService;
     }
