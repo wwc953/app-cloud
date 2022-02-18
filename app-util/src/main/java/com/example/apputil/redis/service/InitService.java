@@ -54,8 +54,6 @@ public class InitService implements CommandLineRunner {
     @Value("{task.reload.flag:false}")
     String flag;
 
-    @Autowired
-    InitListener listener;
 
     public void init() {
 //        log.info("reflash配置....");
@@ -73,7 +71,7 @@ public class InitService implements CommandLineRunner {
 //        }
 //        cache.put(Constants.DATA_CENTER_ID, "32");
 
-        listener.doListenerInitialize();
+        InitListener.doListenerInitialize(Arrays.asList("NUMBERSTRATEGY"));
 
     }
 
