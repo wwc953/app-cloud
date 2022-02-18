@@ -27,7 +27,8 @@ public class NacosClientConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    public ISyncService nacosServiceImpl(@Autowired(required = false) NacosConfigProperties properties) {
+    public ISyncService nacosSyncServiceImpl(@Autowired(required = false) NacosConfigProperties properties) {
+        log.info("装载nacosSyncServiceImpl...");
         ConfigService configService = properties.configServiceInstance();
         ISyncService impl = new ISyncService() {
             @Override

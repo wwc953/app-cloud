@@ -66,8 +66,9 @@ public class RedisClientConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    public ISyncService redisServiceImpl(@Qualifier("globalStringRedisTemplate") StringRedisTemplate template,
+    public ISyncService redisSyncServiceImpl(@Qualifier("globalStringRedisTemplate") StringRedisTemplate template,
                                          @Qualifier("globalRedisMessageListenerContainer") RedisMessageListenerContainer redisContainer) {
+        log.info("装载redisSyncServiceImpl...");
         return new ISyncService() {
             @Override
             public void addListener(String dataId, String group, SyncListener listener) {
