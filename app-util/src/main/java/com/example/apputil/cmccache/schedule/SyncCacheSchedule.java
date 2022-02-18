@@ -4,15 +4,17 @@ import com.example.apputil.cmccache.CommonParamManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
-@Component
+@Configuration
+@EnableScheduling
 @ConditionalOnExpression("${frame.cmccache.use:true}")
 public class SyncCacheSchedule {
 
