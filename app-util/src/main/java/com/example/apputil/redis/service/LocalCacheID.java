@@ -1,10 +1,11 @@
-package com.example.apputil.redis.util;
+package com.example.apputil.redis.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.apputil.redis.model.NumberStrategy;
 import com.example.apputil.cache.CaffeineCache;
 import com.example.apputil.cmccache.fegin.api.SignerFeign;
+import com.example.apputil.constants.CmcConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +31,7 @@ public class LocalCacheID {
     CaffeineCache cache;
 
     public NumberStrategy getStrategyByStNo(String stNo) {
-        return (NumberStrategy) Optional.ofNullable(cache.hget(Constants.NO_STRATEGY_IN_REDIS, stNo)).orElse(null);
+        return (NumberStrategy) Optional.ofNullable(cache.hget(CmcConstants.NO_STRATEGY_IN_REDIS, stNo)).orElse(null);
     }
 
     public String getID(String stNo, Map<String, String> param) {
@@ -118,7 +119,7 @@ public class LocalCacheID {
     }
 
     public String getDataCenterId() {
-        return cache.getString(Constants.DATA_CENTER_ID);
+        return cache.getString(CmcConstants.DATA_CENTER_ID);
     }
 
 
@@ -150,16 +151,16 @@ public class LocalCacheID {
                 Object check = cache.hget(key, typeString);
                 if (check == null) cache.del(key);
 
-                Boolean initial = (Boolean) Optional.ofNullable(cache.hgetObj(key, typeString, Constants.INITIAL_FIELD)).orElse(false);
-                LinkedList<Long> queue = cache.hgetObj(key, typeString, Constants.NOW_QUEUE_FIELD) == null ? new LinkedList<>() : (LinkedList) cache.hgetObj(key, typeString, Constants.NOW_QUEUE_FIELD);
-                ConcurrentLinkedQueue<Map> pendingQueue = cache.hgetObj(key, typeString, Constants.PENDING_QUEUE_FIELD) == null ? new ConcurrentLinkedQueue<>() : (ConcurrentLinkedQueue) cache.hgetObj(key, typeString, Constants.PENDING_QUEUE_FIELD);
+                Boolean initial = (Boolean) Optional.ofNullable(cache.hgetObj(key, typeString, CmcConstants.INITIAL_FIELD)).orElse(false);
+                LinkedList<Long> queue = cache.hgetObj(key, typeString, CmcConstants.NOW_QUEUE_FIELD) == null ? new LinkedList<>() : (LinkedList) cache.hgetObj(key, typeString, CmcConstants.NOW_QUEUE_FIELD);
+                ConcurrentLinkedQueue<Map> pendingQueue = cache.hgetObj(key, typeString, CmcConstants.PENDING_QUEUE_FIELD) == null ? new ConcurrentLinkedQueue<>() : (ConcurrentLinkedQueue) cache.hgetObj(key, typeString, CmcConstants.PENDING_QUEUE_FIELD);
                 Long rs = null;
                 Long asyncTime;
                 if (queue.isEmpty()) {
                     if (pendingQueue.isEmpty()) {
 
                         if (initial) {
-                            asyncTime = (Long) Optional.ofNullable(cache.hgetObj(key, typeString, Constants.ASYNC_TIME_FIELD)).orElse(0L);
+                            asyncTime = (Long) Optional.ofNullable(cache.hgetObj(key, typeString, CmcConstants.ASYNC_TIME_FIELD)).orElse(0L);
                             Map map = JSON.parseObject(JSONObject.toJSONString(st), Map.class);
                             if (ishex) {
                                 map.put("hex", "1");
@@ -180,26 +181,26 @@ public class LocalCacheID {
                         try {
                             if (pendingQueue.isEmpty()) {
                                 pendingQueue.offer(getPendingMapWithFeign(st, ishex));
-                                cache.hset(key, typeString, Constants.PENDING_QUEUE_FIELD, pendingQueue);
+                                cache.hset(key, typeString, CmcConstants.PENDING_QUEUE_FIELD, pendingQueue);
                             }
                         } catch (Exception e) {
                             throw new RuntimeException("从算号器服务获取ID失败", e);
                         }
 
                         initial = true;
-                        cache.hset(key, typeString, Constants.INITIAL_FIELD, initial);
+                        cache.hset(key, typeString, CmcConstants.INITIAL_FIELD, initial);
 
                     }
 
                     Map dataMap = pendingQueue.poll();
                     log.info("取出第二缓存号段：{}，策略编号：{}", dataMap, stNo);
                     queue = convertMapToQueue(dataMap);
-                    cache.hset(key, typeString, Constants.NOW_QUEUE_FIELD, queue);
-                    cache.hset(key, typeString, Constants.THRESHOLD_FIELD, calcThresHold(queue));
+                    cache.hset(key, typeString, CmcConstants.NOW_QUEUE_FIELD, queue);
+                    cache.hset(key, typeString, CmcConstants.THRESHOLD_FIELD, calcThresHold(queue));
                 }
 
                 rs = queue.poll();
-                asyncTime = (Long) cache.hgetObj(key, typeString, Constants.THRESHOLD_FIELD);
+                asyncTime = (Long) cache.hgetObj(key, typeString, CmcConstants.THRESHOLD_FIELD);
                 if (rs.equals(asyncTime)) {
                     log.info("触发阈值，异步缓存第二段队列：策略编号：{}，阈值：{}", stNo, asyncTime);
                     String finalTypeString = typeString;
@@ -209,7 +210,7 @@ public class LocalCacheID {
                             log.info("异步缓存结果，pendingQueue：{},策略编号：{}", pendingQueue, stNo);
                         } catch (Exception e) {
                             log.info("异步缓存出错，纪录时间,策略编号：{}", stNo);
-                            cache.hset(key, finalTypeString, Constants.ASYNC_TIME_FIELD, System.currentTimeMillis());
+                            cache.hset(key, finalTypeString, CmcConstants.ASYNC_TIME_FIELD, System.currentTimeMillis());
                         }
                     });
                 }
@@ -271,10 +272,10 @@ public class LocalCacheID {
         try {
             pendingQueue.offer(getPendingMapWithFeign(st, ishex));
             log.info("异步缓存结果，pendingQueue：{}", pendingQueue);
-            cache.hset(key, typeString, Constants.ASYNC_TIME_FIELD, 0);
+            cache.hset(key, typeString, CmcConstants.ASYNC_TIME_FIELD, 0);
         } catch (Exception e) {
             log.info("异步缓存出错，更新时间,策略编号：{}", st.getStNo());
-            cache.hset(key, typeString, Constants.ASYNC_TIME_FIELD, System.currentTimeMillis());
+            cache.hset(key, typeString, CmcConstants.ASYNC_TIME_FIELD, System.currentTimeMillis());
         }
     }
 

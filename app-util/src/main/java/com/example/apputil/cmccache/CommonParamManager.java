@@ -3,15 +3,21 @@ package com.example.apputil.cmccache;
 import com.example.appstaticutil.model.RedisManagerObj;
 import com.example.apputil.cache.CaffeineCache;
 import com.example.apputil.cmccache.fegin.invoke.FeignInvoke;
+import com.example.apputil.constants.CmcConstants;
+import com.example.apputil.redis.model.SnoSt;
 import com.example.apputil.sync.ISyncService;
 import com.example.apputil.sync.SyncListener;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -71,20 +77,34 @@ public class CommonParamManager {
                 @Override
                 public void recevice(String content) {
                     try {
-                        feignInvoke.getNoStList(false);
+                        storeNoStrategy(false);
                     } catch (Exception e) {
-                        log.error("写入流水号策略失败");
+                        log.error("写入流水号策略失败", e);
                     }
                 }
             });
         }
     }
 
+    public static void storeNoStrategy(boolean needCheck) {
+        List<SnoSt> list = feignInvoke.getNoStList(needCheck);
+        if (CollectionUtils.isNotEmpty(list)) {
+            Map<String, SnoSt> map = list.stream().collect(Collectors.toMap(SnoSt::getStNo, Function.identity(), (x, y) -> {
+                return y;
+            }));
+            List<String> allNames = list.stream().map(SnoSt::getStNo).collect(Collectors.toList());
+            cache.put(CmcConstants.NO_STRATEGY_IN_REDIS, map);
+            cache.put(CmcConstants.NO_STRATEGY_LIST, allNames);
+            log.info("流水号更新成功...");
+        }
+    }
+
+
     public static String getAppName() {
         return appName;
     }
 
-    public static  String getDataCenterId(){
+    public static String getDataCenterId() {
         return cache.getString("dataCenterId");
     }
 }

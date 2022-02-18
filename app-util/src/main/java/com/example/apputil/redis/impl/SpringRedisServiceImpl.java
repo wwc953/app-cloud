@@ -1,7 +1,7 @@
 package com.example.apputil.redis.impl;
 
 import com.example.apputil.redis.api.IRedisService;
-import com.example.apputil.redis.util.LocalCacheID;
+import com.example.apputil.redis.service.LocalCacheID;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;

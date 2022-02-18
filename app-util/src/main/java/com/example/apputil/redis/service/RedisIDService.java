@@ -1,6 +1,7 @@
 package com.example.apputil.redis.service;
 
 import com.alibaba.fastjson.JSON;
+import com.example.apputil.cmccache.CommonParamManager;
 import com.example.apputil.redis.api.IRedisService;
 import com.example.apputil.cache.CaffeineCache;
 import com.example.apputil.cmccache.fegin.api.SignerFeign;
@@ -22,13 +23,10 @@ import static java.lang.Thread.sleep;
 @Order
 @Service
 @Slf4j
-public class InitService implements CommandLineRunner {
+public class RedisIDService {
 
     @Autowired
     CaffeineCache cache;
-
-//    @Autowired
-//    SnoStMapper dao;
 
     @Autowired
     SignerFeign signerFeign;
@@ -39,32 +37,8 @@ public class InitService implements CommandLineRunner {
     @Resource
     ThreadPoolTaskScheduler threadPoolTaskScheduler;
 
-//    ExecutorService executorService = Executors.newFixedThreadPool(10);
-
-
     @Value("{task.reload.flag:false}")
     String flag;
-
-
-    public void init() {
-//        log.info("reflash配置....");
-//        String str = signerFeign.getSnoStList();
-//        log.info("all SnoSt....{}", str);
-//        ResponseResult<List<SnoSt>> responseResult = JsonUtil.convertJsonToObject(str, new TypeReference<ResponseResult<List<SnoSt>>>() {
-//        });
-//        if (ResponseContant.SUCCESS.equals(responseResult.getCode()) && CollectionUtils.isNotEmpty(responseResult.getData())) {
-//            responseResult.getData().forEach(v -> {
-//                NumberStrategy numberStrategy = new NumberStrategy();
-//                BeanUtils.copyProperties(v, numberStrategy);
-//                numberStrategy.setStep(v.getSnoStStep());
-//                cache.hset(Constants.NO_STRATEGY_IN_REDIS, v.getStNo(), numberStrategy);
-//            });
-//        }
-//        cache.put(Constants.DATA_CENTER_ID, "32");
-
-//        InitListener.doListenerInitialize(Arrays.asList("NUMBERSTRATEGY"));
-
-    }
 
 //    public String batchGenerateId(Map map) {
 //        String snIdKey = findKeyAndInitValue(map);
@@ -209,19 +183,6 @@ public class InitService implements CommandLineRunner {
                 //递增
                 return key;
         }
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        threadPoolTaskScheduler.execute(() -> {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            init();
-        });
-
     }
 
 //    @Override
