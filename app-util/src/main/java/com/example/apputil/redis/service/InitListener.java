@@ -70,6 +70,27 @@ public class InitListener {
                 }
             });
         }
+    }
+
+    public void doListenerInitialize() {
+        log.info("该应用使用的公共缓存类型:{}", String.valueOf(types));
+        if (syncService == null) {
+            log.error("ISyncService实例注册失败，将不注册公共组件监听");
+            return;
+        }
+
+        if (types.contains("NUMBERSTRATEGY")) {
+            syncService.addListener("CMC_ST_NO_DATA_ID", "CMC_PUBLISH", new SyncListener() {
+                @Override
+                public void recevice(String content) {
+                    try {
+                        feignInvoke.getNoStList(false);
+                    } catch (Exception e) {
+                        log.error("写入流水号策略失败");
+                    }
+                }
+            });
+        }
 
     }
 

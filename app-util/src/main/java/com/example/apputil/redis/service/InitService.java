@@ -54,21 +54,27 @@ public class InitService implements CommandLineRunner {
     @Value("{task.reload.flag:false}")
     String flag;
 
+    @Autowired
+    InitListener listener;
+
     public void init() {
-        log.info("reflash配置....");
-        String str = signerFeign.getSnoStList();
-        log.info("all SnoSt....{}", str);
-        ResponseResult<List<SnoSt>> responseResult = JsonUtil.convertJsonToObject(str, new TypeReference<ResponseResult<List<SnoSt>>>() {
-        });
-        if (ResponseContant.SUCCESS.equals(responseResult.getCode()) && CollectionUtils.isNotEmpty(responseResult.getData())) {
-            responseResult.getData().forEach(v -> {
-                NumberStrategy numberStrategy = new NumberStrategy();
-                BeanUtils.copyProperties(v, numberStrategy);
-                numberStrategy.setStep(v.getSnoStStep());
-                cache.hset(Constants.NO_STRATEGY_IN_REDIS, v.getStNo(), numberStrategy);
-            });
-        }
-        cache.put(Constants.DATA_CENTER_ID, "32");
+//        log.info("reflash配置....");
+//        String str = signerFeign.getSnoStList();
+//        log.info("all SnoSt....{}", str);
+//        ResponseResult<List<SnoSt>> responseResult = JsonUtil.convertJsonToObject(str, new TypeReference<ResponseResult<List<SnoSt>>>() {
+//        });
+//        if (ResponseContant.SUCCESS.equals(responseResult.getCode()) && CollectionUtils.isNotEmpty(responseResult.getData())) {
+//            responseResult.getData().forEach(v -> {
+//                NumberStrategy numberStrategy = new NumberStrategy();
+//                BeanUtils.copyProperties(v, numberStrategy);
+//                numberStrategy.setStep(v.getSnoStStep());
+//                cache.hset(Constants.NO_STRATEGY_IN_REDIS, v.getStNo(), numberStrategy);
+//            });
+//        }
+//        cache.put(Constants.DATA_CENTER_ID, "32");
+
+        listener.doListenerInitialize();
+
     }
 
 //    public String batchGenerateId(Map map) {
