@@ -1,6 +1,8 @@
 package com.example.apputil.cmccache;
 
+import com.example.appstaticutil.json.JsonUtil;
 import com.example.appstaticutil.model.RedisManagerObj;
+import com.example.appstaticutil.threadpool.ThreadPoolManager;
 import com.example.apputil.cache.CaffeineCache;
 import com.example.apputil.cmccache.fegin.invoke.FeignInvoke;
 import com.example.apputil.constants.CmcConstants;
@@ -35,6 +37,7 @@ public class CommonParamManager {
     private static ISyncService syncService;
 
     public static String REDIS_KEYS = "redisKeys";
+
 
     @Autowired
     public void setCache(CaffeineCache cache) {
@@ -87,6 +90,19 @@ public class CommonParamManager {
         }
     }
 
+    public static void doAllTask(List<String> types) {
+        if (types.contains("NUMBERSTRATEGY")) {
+            ThreadPoolManager threadPool = ThreadPoolManager.getInstance();
+            threadPool.execute(() -> {
+                try {
+                    storeNoStrategy(false);
+                } catch (Exception e) {
+                    log.error("写入流水号策略失败。", e);
+                }
+            });
+        }
+    }
+
     public static void storeNoStrategy(boolean needCheck) {
         List<NumberStrategy> list = feignInvoke.getNoStList(needCheck);
         if (CollectionUtils.isNotEmpty(list)) {
@@ -97,6 +113,8 @@ public class CommonParamManager {
             cache.put(CmcConstants.NO_STRATEGY_IN_REDIS, map);
             cache.put(CmcConstants.NO_STRATEGY_LIST, allNames);
             log.info("流水号更新成功...");
+            log.info("cache --> no_strategy_in_redis :{}", JsonUtil.convertObjectToJson(map));
+            log.info("cache --> NO_STRATEGY_LIST :{}", JsonUtil.convertObjectToJson(allNames));
         }
     }
 

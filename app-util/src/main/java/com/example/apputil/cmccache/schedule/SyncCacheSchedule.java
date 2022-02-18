@@ -1,11 +1,10 @@
-package com.example.apputil.cmccache;
+package com.example.apputil.cmccache.schedule;
 
 import com.example.apputil.cmccache.CommonParamManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,7 +13,8 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class AutoCacheRunner implements ApplicationRunner {
+@ConditionalOnExpression("${frame.cmccache.use:true}")
+public class SyncCacheSchedule {
 
     private List<String> types;
 
@@ -29,9 +29,11 @@ public class AutoCacheRunner implements ApplicationRunner {
         }
     }
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        log.info("该应用使用的公共缓存类型:{}", types);
-        CommonParamManager.doListenerInitialize(types);
+
+    @Scheduled(initialDelay = 1000L, fixedDelay = 900000L)
+    private void task() {
+        log.info("定时任务开始:");
+        CommonParamManager.doAllTask(types);
     }
+
 }

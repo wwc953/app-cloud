@@ -81,7 +81,7 @@ public class FeignInvoke {
                 resultData.add(numberStrategy);
             });
         }
-        log.info("刷新NoStList:{}", resultData);
+        log.info("刷新NoStList:{}", JsonUtil.convertObjectToJson(resultData));
         return resultData;
     }
 
