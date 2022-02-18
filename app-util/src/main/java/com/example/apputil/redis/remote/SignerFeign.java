@@ -12,7 +12,7 @@ public interface SignerFeign {
     @PostMapping("/member/signer/generateId")
     Long generateId(@RequestBody Map map);
 
-    @PostMapping("/member/snost/selectAll")
+    @PostMapping("/member/snost/getSnoStList")
     String getSnoStList();
 
     @PostMapping("/member/snost/synUpdate")

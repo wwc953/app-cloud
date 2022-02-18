@@ -11,12 +11,14 @@ import com.google.gson.JsonArray;
 import com.jayway.jsonpath.*;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.jayway.jsonpath.spi.mapper.GsonMappingProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+@Slf4j
 @Component
 public class FeignInvoke {
 
@@ -62,6 +64,7 @@ public class FeignInvoke {
 
     public List<SnoSt> getNoStList(boolean needCheck) {
         String snoStList = signerFeign.getSnoStList();
+        log.info("刷新NoStList:{}", snoStList);
         ResponseResult<List<SnoSt>> responseResult = JsonUtil.convertJsonToObject(snoStList, new TypeReference<ResponseResult<List<SnoSt>>>() {
         });
         return responseResult.getData();

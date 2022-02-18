@@ -22,11 +22,9 @@ public class SnoStController {
     @Autowired
     SignerService signerService;
 
-    @PostMapping("/selectAll")
-    public ResponseResult<List<SnoSt>> selectAll() {
-        List<SnoSt> snoSts = signerService.selectAll();
-        String res = JsonUtil.convertObjectToJson(snoSts);
-        log.info("server selectAll: {}", res);
+    @PostMapping("/getSnoStList")
+    public ResponseResult<List<SnoSt>> getSnoStList() {
+        List<SnoSt> snoSts = signerService.getSnoStList();
         return ResponseResult.success(snoSts);
     }
 

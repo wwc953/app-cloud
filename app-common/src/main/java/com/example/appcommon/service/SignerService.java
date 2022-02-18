@@ -125,7 +125,7 @@ public class SignerService {
 //        });
     }
 
-    public List<SnoSt> selectAll() {
+    public List<SnoSt> getSnoStList() {
         List<SnoSt> snoSts = dao.selectAll();
         return snoSts;
     }
