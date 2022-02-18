@@ -4,6 +4,7 @@ import com.example.appstaticutil.model.RedisManagerObj;
 import com.example.apputil.cache.CaffeineCache;
 import com.example.apputil.cmccache.fegin.invoke.FeignInvoke;
 import com.example.apputil.constants.CmcConstants;
+import com.example.apputil.redis.model.NumberStrategy;
 import com.example.apputil.redis.model.SnoSt;
 import com.example.apputil.sync.ISyncService;
 import com.example.apputil.sync.SyncListener;
@@ -87,12 +88,12 @@ public class CommonParamManager {
     }
 
     public static void storeNoStrategy(boolean needCheck) {
-        List<SnoSt> list = feignInvoke.getNoStList(needCheck);
+        List<NumberStrategy> list = feignInvoke.getNoStList(needCheck);
         if (CollectionUtils.isNotEmpty(list)) {
-            Map<String, SnoSt> map = list.stream().collect(Collectors.toMap(SnoSt::getStNo, Function.identity(), (x, y) -> {
+            Map<String, NumberStrategy> map = list.stream().collect(Collectors.toMap(NumberStrategy::getStNo, Function.identity(), (x, y) -> {
                 return y;
             }));
-            List<String> allNames = list.stream().map(SnoSt::getStNo).collect(Collectors.toList());
+            List<String> allNames = list.stream().map(NumberStrategy::getStNo).collect(Collectors.toList());
             cache.put(CmcConstants.NO_STRATEGY_IN_REDIS, map);
             cache.put(CmcConstants.NO_STRATEGY_LIST, allNames);
             log.info("流水号更新成功...");

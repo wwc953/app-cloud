@@ -5,6 +5,7 @@ import com.example.appstaticutil.json.JsonUtil;
 import com.example.appstaticutil.response.ResponseResult;
 import com.example.apputil.cache.CaffeineCache;
 import com.example.appstaticutil.model.RedisManagerObj;
+import com.example.apputil.redis.model.NumberStrategy;
 import com.example.apputil.redis.model.SnoSt;
 import com.example.apputil.cmccache.fegin.api.SignerFeign;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -63,10 +64,10 @@ public class FeignInvoke {
         return rediskeys;
     }
 
-    public List<SnoSt> getNoStList(boolean needCheck) {
+    public List<NumberStrategy> getNoStList(boolean needCheck) {
         String snoStList = signerFeign.getSnoStList();
         log.info("刷新NoStList:{}", snoStList);
-        ResponseResult<List<SnoSt>> responseResult = JsonUtil.convertJsonToObject(snoStList, new TypeReference<ResponseResult<List<SnoSt>>>() {
+        ResponseResult<List<NumberStrategy>> responseResult = JsonUtil.convertJsonToObject(snoStList, new TypeReference<ResponseResult<List<NumberStrategy>>>() {
         });
         return responseResult.getData();
     }

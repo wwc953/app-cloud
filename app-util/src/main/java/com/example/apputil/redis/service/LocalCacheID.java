@@ -30,6 +30,14 @@ public class LocalCacheID {
     @Autowired
     CaffeineCache cache;
 
+    @Value("${init.retry.time:300000}")
+    int retryTime;
+
+    @Autowired
+    SignerFeign feign;
+
+    Executor threadPool = Executors.newCachedThreadPool();
+
     public NumberStrategy getStrategyByStNo(String stNo) {
         return (NumberStrategy) Optional.ofNullable(cache.hget(CmcConstants.NO_STRATEGY_IN_REDIS, stNo)).orElse(null);
     }
@@ -122,18 +130,6 @@ public class LocalCacheID {
         return cache.getString(CmcConstants.DATA_CENTER_ID);
     }
 
-
-    @Value("${init.retry.time:300000}")
-    int retryTime;
-
-//    @Autowired
-//    InitService feign;
-
-    @Autowired
-    SignerFeign feign;
-
-    Executor threadPool = Executors.newCachedThreadPool();
-
     public Long generateId(NumberStrategy st, boolean ishex) {
         String generateType = st.getGenType();
         Long noLength = st.getNoLength();
@@ -165,7 +161,7 @@ public class LocalCacheID {
                             if (ishex) {
                                 map.put("hex", "1");
                             }
-                            rs = (Long) Optional.of(feign.generateId(map)).get();
+                            rs = Optional.of(feign.generateId(map)).get();
                             log.info("等待队列为空，已初始化，直接降级为从发号器获取，直到服务恢复,ids={}", rs);
                             long nowTime = System.currentTimeMillis();
                             if (asyncTime != 0L && nowTime - asyncTime > retryTime) {
@@ -289,7 +285,7 @@ public class LocalCacheID {
         if (isHex) {
             param.put("hex", "1");
         }
-        log.info("getPendingMapWithFeign -- st: {}",JSONObject.toJSONString(st));
+        log.info("getPendingMapWithFeign -- st: {}", JSONObject.toJSONString(st));
         if (feign == null) {
             log.info("fegin is null");
         }
