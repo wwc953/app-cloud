@@ -20,7 +20,7 @@ public class SignerFeignFallBack implements SignerFeign {
     }
 
     @Override
-    public String selectAll() {
+    public String getSnoStList() {
         return JsonUtil.convertObjectToJson(ResponseResult.fail(ResponseContant.FAIL, ResponseContant.TIME_OUT_MSG));
     }
 

@@ -28,7 +28,7 @@ import java.util.*;
 
 import static java.lang.Thread.sleep;
 
-@Order(10)
+@Order
 @Service
 @Slf4j
 public class InitService implements CommandLineRunner {
@@ -48,7 +48,6 @@ public class InitService implements CommandLineRunner {
     @Resource
     ThreadPoolTaskScheduler threadPoolTaskScheduler;
 
-//
 //    ExecutorService executorService = Executors.newFixedThreadPool(10);
 
 
@@ -57,7 +56,7 @@ public class InitService implements CommandLineRunner {
 
     public void init() {
         log.info("reflash配置....");
-        String str = signerFeign.selectAll();
+        String str = signerFeign.getSnoStList();
         log.info("all SnoSt....{}", str);
         ResponseResult<List<SnoSt>> responseResult = JsonUtil.convertJsonToObject(str, new TypeReference<ResponseResult<List<SnoSt>>>() {
         });

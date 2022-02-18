@@ -13,7 +13,7 @@ public interface SignerFeign {
     Long generateId(@RequestBody Map map);
 
     @PostMapping("/member/snost/selectAll")
-    String selectAll();
+    String getSnoStList();
 
     @PostMapping("/member/snost/synUpdate")
     String synUpdate(Map param);

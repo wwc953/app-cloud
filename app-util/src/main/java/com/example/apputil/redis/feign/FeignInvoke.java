@@ -2,7 +2,11 @@ package com.example.apputil.redis.feign;
 
 import com.example.appstaticutil.encry.MD5Utils;
 import com.example.appstaticutil.json.JsonUtil;
+import com.example.appstaticutil.response.ResponseResult;
 import com.example.apputil.cache.CaffeineCache;
+import com.example.apputil.redis.model.SnoSt;
+import com.example.apputil.redis.remote.SignerFeign;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.JsonArray;
 import com.jayway.jsonpath.*;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
@@ -15,8 +19,12 @@ import java.util.List;
 
 @Component
 public class FeignInvoke {
+
     @Autowired
     private CaffeineCache cache;
+
+    @Autowired
+    SignerFeign signerFeign;
 
     public static final String REDIS_MGT_MD5 = "redisMgtMd5";
 
@@ -42,7 +50,7 @@ public class FeignInvoke {
         }
 
         DocumentContext document = JsonPath.using(jsonPathConf).parse(value);
-        List<RedisManagerObj> rediskeys = (List) document.read("$.data." + centerName + "[*]", new TypeRef<List<RedisManagerObj>>() {
+        List<RedisManagerObj> rediskeys = document.read("$.data." + centerName + "[*]", new TypeRef<List<RedisManagerObj>>() {
         });
         if (rediskeys != null) {
             JsonArray read = document.read("$.data." + centerName + "[*]", new Predicate[0]);
@@ -50,6 +58,21 @@ public class FeignInvoke {
             cache.put(REDIS_MGT_MD5, md5v);
         }
         return rediskeys;
+    }
+
+    public List<SnoSt> getNoStList(boolean needCheck) {
+        String snoStList = signerFeign.getSnoStList();
+        ResponseResult<List<SnoSt>> responseResult = JsonUtil.convertJsonToObject(snoStList, new TypeReference<ResponseResult<List<SnoSt>>>() {
+        });
+        return responseResult.getData();
+    }
+
+    public List<SnoSt> getNoStListByDoc(boolean needCheck) {
+        String snoStList = signerFeign.getSnoStList();
+        DocumentContext document = JsonPath.using(jsonPathConf).parse(snoStList);
+        List<SnoSt> list = document.read("$.data.strategys[*]", new TypeRef<List<SnoSt>>() {
+        });
+        return list;
     }
 
 }
