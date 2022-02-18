@@ -4,6 +4,7 @@ import com.example.appcommon.model.SnoSt;
 import com.example.appcommon.service.SignerService;
 import com.example.appstaticutil.json.JsonUtil;
 import com.example.appstaticutil.response.ResponseResult;
+import com.example.apputil.sync.util.CmcPublishUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,5 +36,11 @@ public class SnoStController {
         Integer synUpdate = signerService.synUpdate(map);
         log.info("synUpdate <-- {}", synUpdate);
         return synUpdate;
+    }
+
+    @PostMapping("/nostrategyPublish")
+    public String nostrategyPublish() {
+        CmcPublishUtil.NostrategyPublish();
+        return "success";
     }
 }
