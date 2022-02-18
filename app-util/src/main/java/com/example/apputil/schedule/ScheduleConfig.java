@@ -1,4 +1,4 @@
-package com.example.apputil.redis.config;
+package com.example.apputil.schedule;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

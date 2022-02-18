@@ -1,9 +1,8 @@
-package com.example.apputil.redis.config;
+package com.example.apputil.cmccache.fegin;
 
-import com.example.apputil.redis.remote.SignerFeign;
-import com.example.apputil.redis.remote.SignerFeignFallBack;
+import com.example.apputil.cmccache.fegin.api.SignerFeign;
+import com.example.apputil.cmccache.fegin.api.SignerFeignFallBack;
 import feign.Client;
-import feign.Contract;
 import feign.RequestInterceptor;
 import feign.Retryer;
 import feign.codec.Decoder;

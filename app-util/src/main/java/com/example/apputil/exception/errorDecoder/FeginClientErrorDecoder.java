@@ -1,4 +1,4 @@
-package com.example.apputil.redis.exception.errorDecoder;
+package com.example.apputil.exception.errorDecoder;
 
 import feign.FeignException;
 import feign.Response;

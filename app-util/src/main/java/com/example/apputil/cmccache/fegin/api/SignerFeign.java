@@ -1,4 +1,4 @@
-package com.example.apputil.redis.remote;
+package com.example.apputil.cmccache.fegin.api;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

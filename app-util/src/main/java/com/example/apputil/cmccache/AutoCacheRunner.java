@@ -1,6 +1,6 @@
-package com.example.apputil.redis.service;
+package com.example.apputil.cmccache;
 
-import com.example.apputil.redis.feign.CommonParamManager;
+import com.example.apputil.cmccache.CommonParamManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -34,6 +34,5 @@ public class AutoCacheRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         log.info("该应用使用的公共缓存类型:{}", types);
         CommonParamManager.doListenerInitialize(types);
-
     }
 }

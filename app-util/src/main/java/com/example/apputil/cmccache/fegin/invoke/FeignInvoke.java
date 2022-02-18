@@ -1,11 +1,12 @@
-package com.example.apputil.redis.feign;
+package com.example.apputil.cmccache.fegin.invoke;
 
 import com.example.appstaticutil.encry.MD5Utils;
 import com.example.appstaticutil.json.JsonUtil;
 import com.example.appstaticutil.response.ResponseResult;
 import com.example.apputil.cache.CaffeineCache;
+import com.example.appstaticutil.model.RedisManagerObj;
 import com.example.apputil.redis.model.SnoSt;
-import com.example.apputil.redis.remote.SignerFeign;
+import com.example.apputil.cmccache.fegin.api.SignerFeign;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.JsonArray;
 import com.jayway.jsonpath.*;

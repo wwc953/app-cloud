@@ -1,6 +1,8 @@
-package com.example.apputil.redis.feign;
+package com.example.apputil.cmccache;
 
+import com.example.appstaticutil.model.RedisManagerObj;
 import com.example.apputil.cache.CaffeineCache;
+import com.example.apputil.cmccache.fegin.invoke.FeignInvoke;
 import com.example.apputil.sync.ISyncService;
 import com.example.apputil.sync.SyncListener;
 import lombok.extern.slf4j.Slf4j;

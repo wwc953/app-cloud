@@ -1,19 +1,10 @@
 package com.example.apputil.redis.service;
 
 import com.alibaba.fastjson.JSON;
-import com.example.appstaticutil.json.JsonUtil;
-import com.example.appstaticutil.response.ResponseContant;
-import com.example.appstaticutil.response.ResponseResult;
 import com.example.apputil.redis.api.IRedisService;
-import com.example.apputil.redis.model.NumberStrategy;
-import com.example.apputil.redis.model.SnoSt;
 import com.example.apputil.cache.CaffeineCache;
-import com.example.apputil.redis.remote.SignerFeign;
-import com.example.apputil.redis.util.Constants;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.example.apputil.cmccache.fegin.api.SignerFeign;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;

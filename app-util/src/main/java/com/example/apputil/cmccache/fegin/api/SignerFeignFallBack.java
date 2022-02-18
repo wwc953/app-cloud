@@ -1,4 +1,4 @@
-package com.example.apputil.redis.remote;
+package com.example.apputil.cmccache.fegin.api;
 
 import com.example.appstaticutil.json.JsonUtil;
 import com.example.appstaticutil.response.ResponseContant;

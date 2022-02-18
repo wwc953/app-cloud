@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.apputil.redis.model.NumberStrategy;
 import com.example.apputil.cache.CaffeineCache;
-import com.example.apputil.redis.remote.SignerFeign;
+import com.example.apputil.cmccache.fegin.api.SignerFeign;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

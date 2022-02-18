@@ -1,4 +1,4 @@
-package com.example.apputil.redis.feign;
+package com.example.appstaticutil.model;
 
 import java.io.Serializable;
 
