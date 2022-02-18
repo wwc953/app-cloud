@@ -2,6 +2,7 @@ package com.example.apputil.cmccache.fegin.invoke;
 
 import com.example.appstaticutil.encry.MD5Utils;
 import com.example.appstaticutil.json.JsonUtil;
+import com.example.appstaticutil.response.ResponseContant;
 import com.example.appstaticutil.response.ResponseResult;
 import com.example.apputil.cache.CaffeineCache;
 import com.example.appstaticutil.model.RedisManagerObj;
@@ -14,10 +15,13 @@ import com.jayway.jsonpath.*;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.jayway.jsonpath.spi.mapper.GsonMappingProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -66,10 +70,19 @@ public class FeignInvoke {
 
     public List<NumberStrategy> getNoStList(boolean needCheck) {
         String snoStList = signerFeign.getSnoStList();
-        log.info("刷新NoStList:{}", snoStList);
-        ResponseResult<List<NumberStrategy>> responseResult = JsonUtil.convertJsonToObject(snoStList, new TypeReference<ResponseResult<List<NumberStrategy>>>() {
+        List<NumberStrategy> resultData = new ArrayList<>();
+        ResponseResult<List<SnoSt>> responseResult = JsonUtil.convertJsonToObject(snoStList, new TypeReference<ResponseResult<List<SnoSt>>>() {
         });
-        return responseResult.getData();
+        if (ResponseContant.SUCCESS.equals(responseResult.getCode()) && CollectionUtils.isNotEmpty(responseResult.getData())) {
+            responseResult.getData().forEach(v -> {
+                NumberStrategy numberStrategy = new NumberStrategy();
+                BeanUtils.copyProperties(v, numberStrategy);
+                numberStrategy.setStep(v.getSnoStStep());
+                resultData.add(numberStrategy);
+            });
+        }
+        log.info("刷新NoStList:{}", resultData);
+        return resultData;
     }
 
     public List<SnoSt> getNoStListByDoc(boolean needCheck) {

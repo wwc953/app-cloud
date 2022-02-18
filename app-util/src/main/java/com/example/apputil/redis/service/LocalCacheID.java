@@ -50,7 +50,7 @@ public class LocalCacheID {
         contentArr.forEach(t -> {
             String tmpRs = generateCode(t, st, param == null ? null : param.get(t), null, false, false);
             if (tmpRs == null && log.isInfoEnabled()) {
-                log.info("getId{}策略编号stNo:{}中,{}项的值解析失败，将被忽略,", stNo, t);
+                log.info("策略编号stNo:{}中,{}项的值解析失败，将被忽略,", stNo, t);
             }
             sb.append(tmpRs == null ? "" : tmpRs);
         });
