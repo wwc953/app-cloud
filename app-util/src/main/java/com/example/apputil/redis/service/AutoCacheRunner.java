@@ -1,5 +1,6 @@
 package com.example.apputil.redis.service;
 
+import com.example.apputil.redis.feign.CommonParamManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
