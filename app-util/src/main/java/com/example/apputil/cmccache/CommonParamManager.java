@@ -150,7 +150,7 @@ public class CommonParamManager {
     }
 
     public static String getDataCenterId() {
-        String dataCenterId = cache.getString("dataCenterId");
+        String dataCenterId = cache.getString(CmcConstants.DATA_CENTER_ID);
         return dataCenterId;
     }
 }
