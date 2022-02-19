@@ -77,7 +77,6 @@ public class CommonParamManager {
                 @Override
                 public void recevice(String content) {
                     try {
-                        storeDataCenterId();
                         storeNoStrategy(false);
                     } catch (Exception e) {
                         log.error("写入流水号策略失败", e);
@@ -101,6 +100,16 @@ public class CommonParamManager {
                     storeNoStrategy(false);
                 } catch (Exception e) {
                     log.error("写入流水号策略失败。", e);
+                }
+            });
+        }
+        if (types.contains("NUMBERSTRATEGY")) {
+            ThreadPoolManager threadPool = ThreadPoolManager.getInstance();
+            threadPool.execute(() -> {
+                try {
+                    storeDataCenterId();
+                } catch (Exception e) {
+                    log.error("写入数据中心参数失败。", e);
                 }
             });
         }
@@ -139,7 +148,7 @@ public class CommonParamManager {
      */
     public static void storeDataCenterId() {
         String dataCenterId = feignInvoke.getDataCenterId();
-        log.info("dataCenterId ===> {}", dataCenterId);
+        log.info("dataCenterId: {}", dataCenterId);
         cache.put(CmcConstants.DATA_CENTER_ID, dataCenterId);
     }
 
