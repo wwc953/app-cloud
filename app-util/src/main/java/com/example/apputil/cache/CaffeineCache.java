@@ -19,7 +19,7 @@ public class CaffeineCache {
     Cache<String, Object> cache;
 
     public void put(String key, Object value) {
-        Assert.notNull(value, "缓存value为空");
+        Assert.notNull(value, "CaffeineCache key:" + key + ",缓存的value为空");
         cache.put(key, value);
     }
 
