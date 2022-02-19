@@ -29,6 +29,7 @@ public class AuthenticationUtil {
 
             String userInfoStr = request.getHeader("userInfo");
             if (StringUtils.isNotBlank(userInfoStr)) {
+                log.info("userInfo ======> {}",userInfoStr);
                 userInfoStr = URLDecoder.decode(userInfoStr, "utf-8");
                 SystemUser systemUser = JSON.parseObject(userInfoStr, SystemUser.class);
                 return systemUser;
