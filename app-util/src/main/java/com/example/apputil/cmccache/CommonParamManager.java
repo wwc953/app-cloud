@@ -84,6 +84,18 @@ public class CommonParamManager {
                 }
             });
         }
+        if (types.contains("NUMBERSTRATEGY")) {
+            syncService.addListener("CMC_ST_NO_DATA_ID", "CMC_PUBLISH", new SyncListener() {
+                @Override
+                public void recevice(String content) {
+                    try {
+                        storeDataCenterId();
+                    } catch (Exception e) {
+                        log.error("写入数据中心参数失败。", e);
+                    }
+                }
+            });
+        }
     }
 
     /**
