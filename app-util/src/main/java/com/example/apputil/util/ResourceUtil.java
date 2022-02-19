@@ -16,7 +16,7 @@ public class ResourceUtil {
     private static SpringMVCUtil requestUtil;
 
     @Autowired
-    public static void setRequestUtil(SpringMVCUtil requestUtil) {
+    public void setRequestUtil(SpringMVCUtil requestUtil) {
         ResourceUtil.requestUtil = requestUtil;
     }
 
