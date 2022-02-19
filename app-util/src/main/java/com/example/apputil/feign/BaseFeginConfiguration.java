@@ -32,12 +32,6 @@ public class BaseFeginConfiguration {
     @Autowired
     private SpringMVCUtil requestUtil;
 
-
-//    public HttpServletRequest getRequest() {
-//        ServletRequestAttributes sra = (ServletRequestAttributes) Optional.ofNullable(RequestContextHolder.getRequestAttributes()).orElse(null);
-//        return sra == null ? null : sra.getRequest();
-//    }
-
     @Bean
     public RequestInterceptor baseInterceptor() {
 
