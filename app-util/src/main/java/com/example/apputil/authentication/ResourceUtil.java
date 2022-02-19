@@ -26,13 +26,12 @@ public class ResourceUtil {
                 log.error("获取不到当前请求，当前用户资源内容返回null");
                 return null;
             } else {
-                String resource = request.getHeader(RESOURCE_NAME);
-                log.info("resourceName ======> {}", resource);
-                if (!StringUtils.isEmpty(request)) {
-                    log.info("resourceName URLDecoder ======> {}", resource);
-                    resource = URLDecoder.decode(resource, "utf-8");
+                String resourceName = request.getHeader(RESOURCE_NAME);
+                log.info("resourceName ======> {}", resourceName);
+                if (!StringUtils.isEmpty(resourceName)) {
+                    resourceName = URLDecoder.decode(resourceName, "utf-8");
                 }
-                return resource;
+                return resourceName;
             }
         } catch (Exception e) {
             e.printStackTrace();
