@@ -43,7 +43,7 @@ public class FeignInvoke {
                 .jsonProvider(new GsonJsonProvider())
                 .mappingProvider(new GsonMappingProvider())
                 .build()
-                .addOptions(new Option[]{Option.DEFAULT_PATH_LEAF_TO_NULL});
+                .addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL);
     }
 
     public List<RedisManagerObj> getRedisMgt(String centerName, boolean needCheck) {

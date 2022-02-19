@@ -7,7 +7,7 @@ public class ThreadPoolManager {
 
     private static volatile ThreadPoolManager singleInstance;
 
-    private ExecutorService executor;
+    private final ExecutorService executor;
 
     private ThreadPoolManager() {
         executor = new ThreadPoolExecutor(0, 19999, 60L, TimeUnit.SECONDS, new SynchronousQueue<>());

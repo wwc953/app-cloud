@@ -1,12 +1,13 @@
 package com.example.appstaticutil.encry;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 public class MD5Utils {
     public static String md5(String source) {
         try {
 
-            byte[] bytes = source.getBytes("UTF-8");
+            byte[] bytes = source.getBytes(StandardCharsets.UTF_8);
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
             byte[] result = messageDigest.digest(bytes);
             StringBuffer sb = new StringBuffer();

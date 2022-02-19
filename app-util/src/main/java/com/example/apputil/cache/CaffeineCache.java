@@ -32,7 +32,7 @@ public class CaffeineCache {
 
     public Object getObject(String key) {
         Object value = cache.getIfPresent(key);
-        return value != null ? value : null;
+        return value;
     }
 
     public List<Object> getListByKey(String key) {
@@ -54,7 +54,7 @@ public class CaffeineCache {
     }
 
     public String hget(String key, String item, String option) {
-        return (String) Optional.ofNullable(cache).map(c -> {
+        return Optional.ofNullable(cache).map(c -> {
             return (Map) c.getIfPresent(key);
         }).map(v -> {
             return (Map) v.get(item);

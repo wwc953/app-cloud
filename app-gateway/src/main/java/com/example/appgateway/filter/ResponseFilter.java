@@ -18,7 +18,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * response 加密
@@ -47,7 +47,7 @@ public class ResponseFilter implements GlobalFilter, Ordered {
                         dataBuffer.read(content);
                         //释放掉内存
                         DataBufferUtils.release(dataBuffer);
-                        String respData = new String(content, Charset.forName("UTF-8"));
+                        String respData = new String(content, StandardCharsets.UTF_8);
                         //TODO，respData就是response的值，想修改、查看就随意而为了
                         if ("true".equals(encFlag)) {
 

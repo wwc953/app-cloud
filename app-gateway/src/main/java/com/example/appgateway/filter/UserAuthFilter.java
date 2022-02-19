@@ -60,7 +60,7 @@ public class UserAuthFilter implements GlobalFilter, Ordered {
         if ("websocket".equalsIgnoreCase(upgrade)) {
             int len = requestUri.lastIndexOf("/");
             newPath = requestUri.substring(0, len);
-            token = requestUri.substring(len + 1, requestUri.length());
+            token = requestUri.substring(len + 1);
         }
 
         //TODO 是否校验token

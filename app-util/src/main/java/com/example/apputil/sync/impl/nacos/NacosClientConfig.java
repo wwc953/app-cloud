@@ -23,7 +23,7 @@ import java.util.concurrent.Executor;
 @Configuration
 @ConditionalOnClass({ConfigService.class, NacosConfigProperties.class})
 public class NacosClientConfig {
-    private ConcurrentHashMap<SyncListener, Listener> listenerCache = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<SyncListener, Listener> listenerCache = new ConcurrentHashMap<>();
 
     @Bean
     @ConditionalOnMissingBean

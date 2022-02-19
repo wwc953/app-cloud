@@ -25,5 +25,5 @@ public @interface TransfCode {
      */
     String codeType() default "";
 
-    public static String Mgt_ORG_CODE = "mgtOrgCode";
+    String Mgt_ORG_CODE = "mgtOrgCode";
 }

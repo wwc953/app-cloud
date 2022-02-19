@@ -21,8 +21,8 @@ import java.util.Map;
  */
 public class JsonUtil {
 
-    private static Gson gson;
-    private static ObjectMapper objectMapper;
+    private static final Gson gson;
+    private static final ObjectMapper objectMapper;
 
     static {
         GsonBuilder gb = new GsonBuilder();
@@ -40,7 +40,7 @@ public class JsonUtil {
 
     public static Map convertJsonToMap(String jsonString) {
         try {
-            return (Map) objectMapper.readValue(jsonString, Map.class);
+            return objectMapper.readValue(jsonString, Map.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

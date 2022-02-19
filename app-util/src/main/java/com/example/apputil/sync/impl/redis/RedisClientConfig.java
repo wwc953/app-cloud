@@ -42,7 +42,7 @@ public class RedisClientConfig {
     @Autowired
     GlobalRedisProperties properties;
 
-    private ConcurrentHashMap<SyncListener, MessageListener> cache = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<SyncListener, MessageListener> cache = new ConcurrentHashMap<>();
 
     @Bean("globalRedisConnectionFactory")
     public RedisConnectionFactory redisConnectionFactory() {

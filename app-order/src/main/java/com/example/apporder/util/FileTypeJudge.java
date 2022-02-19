@@ -108,7 +108,7 @@ public class FileTypeJudge {
         return null;
     }
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) throws Exception {
         String fileName = "/Users/wangwc/IdeaProjects/uploadfiles/营销2.0物理数据模型.zip";
         System.out.println(FileTypeJudge.getType(fileName).name());
         String[] splitName = fileName.split("\\.");

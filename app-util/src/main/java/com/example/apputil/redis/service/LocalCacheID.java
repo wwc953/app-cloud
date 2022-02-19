@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 @Component
 public class LocalCacheID {
 
-    private static Pattern p = Pattern.compile("\\{(.*?)\\}");
+    private static final Pattern p = Pattern.compile("\\{(.*?)\\}");
 
     @Autowired
     CaffeineCache cache;

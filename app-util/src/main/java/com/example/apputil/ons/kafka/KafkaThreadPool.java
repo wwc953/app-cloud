@@ -7,7 +7,7 @@ public class KafkaThreadPool {
 
     private static volatile KafkaThreadPool singleInstance;
 
-    private ExecutorService executor;
+    private final ExecutorService executor;
 
     @Value("${mq.threadNumber:8}")
     private Integer threadNumber;

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class SpringRedisServiceImpl implements IRedisService, InitializingBean {
-    private static Map<String, String> configMap = null;
+    private static final Map<String, String> configMap = null;
     @Value("${dataCenter.url:http://localhost:8088}")
     String dataCenterUrl;
     @Autowired
@@ -42,7 +42,7 @@ public class SpringRedisServiceImpl implements IRedisService, InitializingBean {
     @Autowired
     LocalCacheID localCacheID;
 
-    private ObjectMapper om = new ObjectMapper();
+    private final ObjectMapper om = new ObjectMapper();
 
     @PostConstruct
     public void init() {
@@ -60,7 +60,7 @@ public class SpringRedisServiceImpl implements IRedisService, InitializingBean {
 
     @Override
     public void put(String key, Object value, int TTL) {
-        this.template.opsForValue().set(key, value, (long) TTL, TimeUnit.SECONDS);
+        this.template.opsForValue().set(key, value, TTL, TimeUnit.SECONDS);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class SpringRedisServiceImpl implements IRedisService, InitializingBean {
 
     @Override
     public long expire(String key, int TTL) {
-        this.template.expire(key, (long) TTL, TimeUnit.SECONDS);
+        this.template.expire(key, TTL, TimeUnit.SECONDS);
         return this.template.getExpire(key);
     }
 
@@ -177,13 +177,13 @@ public class SpringRedisServiceImpl implements IRedisService, InitializingBean {
         objmaps.forEach((key, value) -> {
             this.template.opsForHash().putAll(key, value);
         });
-        return (long) objmaps.size();
+        return objmaps.size();
     }
 
     @Override
     public long batchDel(List<String> bigkeyList) {
         this.template.delete(bigkeyList);
-        return (long) bigkeyList.size();
+        return bigkeyList.size();
     }
 
     @Override
@@ -233,7 +233,7 @@ public class SpringRedisServiceImpl implements IRedisService, InitializingBean {
 
     @Override
     public Set<Object> zrangeByScore(String key, double min, double max, int offset, int count) {
-        return this.template.opsForZSet().rangeByScore(key, min, max, (long) offset, (long) count);
+        return this.template.opsForZSet().rangeByScore(key, min, max, offset, count);
     }
 
     @Override
@@ -292,7 +292,7 @@ public class SpringRedisServiceImpl implements IRedisService, InitializingBean {
         long incRs = this.incr(incrId + HH);
         DecimalFormat df = new DecimalFormat("000000000");
         String incStr = df.format(incRs);
-        return yyMMddHH + incStr + (configMap == null ? "01" : (String) configMap.get("dataCenterCode"));
+        return yyMMddHH + incStr + (configMap == null ? "01" : configMap.get("dataCenterCode"));
     }
 
     @Override
@@ -388,12 +388,7 @@ public class SpringRedisServiceImpl implements IRedisService, InitializingBean {
     }
 
     private byte[] rawKey(String key) {
-        try {
-            return key.getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return key.getBytes(StandardCharsets.UTF_8);
     }
 
     private byte[] rawValue(Object value) {

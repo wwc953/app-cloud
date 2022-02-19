@@ -32,7 +32,7 @@ public class AppFeignRibbonClientAutoConfiguration {
     @ConditionalOnMissingClass({"org.springframework.retry.support.RetryTemplate"})
     public CachingSpringLoadBalancerFactory cachingSpringLoadBalancerFactory(SpringClientFactory factory) {
         return new CachingSpringLoadBalancerFactory(factory) {
-            private volatile Map<String, FeignLoadBalancer> cache = new ConcurrentReferenceHashMap();
+            private final Map<String, FeignLoadBalancer> cache = new ConcurrentReferenceHashMap();
 
             @Override
             public FeignLoadBalancer create(String clientName) {
