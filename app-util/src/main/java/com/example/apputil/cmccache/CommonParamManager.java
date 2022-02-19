@@ -108,10 +108,16 @@ public class CommonParamManager {
             ThreadPoolManager threadPool = ThreadPoolManager.getInstance();
             threadPool.execute(() -> {
                 try {
-                    storeDataCenterId();
                     storeNoStrategy(false);
                 } catch (Exception e) {
                     log.error("写入流水号策略失败。", e);
+                }
+            });
+            threadPool.execute(() -> {
+                try {
+                    storeDataCenterId();
+                } catch (Exception e) {
+                    log.error("写入数据中心参数失败。", e);
                 }
             });
         }
