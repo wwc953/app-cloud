@@ -3,6 +3,7 @@ package com.example.apputil.cache;
 import com.github.benmanes.caffeine.cache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.util.*;
 
@@ -18,6 +19,7 @@ public class CaffeineCache {
     Cache<String, Object> cache;
 
     public void put(String key, Object value) {
+        Assert.notNull(value, "value为空");
         cache.put(key, value);
     }
 
