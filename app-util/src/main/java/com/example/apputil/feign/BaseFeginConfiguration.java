@@ -55,7 +55,6 @@ public class BaseFeginConfiguration {
                 String resourceName = ResourceUtil.getCurrentResource();
                 log.info("BaseFeginConfiguration resourceName ======> {}", resourceName);
                 if (StringUtils.isNotBlank(resourceName)) {
-                    log.info("BaseFeginConfiguration resourceName encode ======> {}", resourceName);
                     requestTemplate.header(ResourceUtil.RESOURCE_NAME, URLEncoder.encode(resourceName, "UTF-8"));
                 }
             } catch (Exception e) {
@@ -68,6 +67,7 @@ public class BaseFeginConfiguration {
                 if (request != null) {
                     traceId = (String) Optional.ofNullable(request.getAttribute(TRACE_ID)).orElse("");
                 }
+                log.info("BaseFeginConfiguration getAttribute traceId ======> {}", traceId);
                 if (StringUtils.isBlank(traceId)) {
                     traceId = UUID.randomUUID().toString().replaceAll("-", "");
                     Span span = getArmsSpan();
@@ -75,6 +75,7 @@ public class BaseFeginConfiguration {
                         traceId = traceId + "," + span.getTraceId();
                     }
                 }
+                log.info("BaseFeginConfiguration end traceId ======> {}", traceId);
                 requestTemplate.header(TRACE_ID, traceId);
             } catch (Exception e) {
                 log.error("Fegin塞入traceId失败", e);

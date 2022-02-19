@@ -27,7 +27,6 @@ public class ResourceUtil {
                 return null;
             } else {
                 String resourceName = request.getHeader(RESOURCE_NAME);
-                log.info("resourceName ======> {}", resourceName);
                 if (!StringUtils.isEmpty(resourceName)) {
                     resourceName = URLDecoder.decode(resourceName, "utf-8");
                 }
