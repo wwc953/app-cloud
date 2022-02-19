@@ -32,7 +32,7 @@ public class SyncCacheSchedule {
     }
 
 
-    @Scheduled(initialDelay = 1000L, fixedDelay = 900000L)
+    @Scheduled(initialDelay = 2000L, fixedDelay = 900000L)
     private void task() {
         log.info("定时任务开始:");
         CommonParamManager.doAllTask(types);

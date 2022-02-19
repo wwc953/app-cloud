@@ -11,6 +11,7 @@ import com.example.apputil.sync.ISyncService;
 import com.example.apputil.sync.SyncListener;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -130,6 +131,7 @@ public class CommonParamManager {
      */
     public static void storeNoStrategy(boolean needCheck) {
         List<NumberStrategy> list = feignInvoke.getNoStList(needCheck);
+        //重试次数
         int i = 0;
         while (CollectionUtils.isEmpty(list) && i < 3) {
             i++;
@@ -168,6 +170,19 @@ public class CommonParamManager {
      */
     public static void storeDataCenterId() {
         String dataCenterId = feignInvoke.getDataCenterId();
+        log.info("appName===={}", appName);
+        //重试次数
+        int i = 0;
+        while (StringUtils.isBlank(dataCenterId) && i < 3) {
+            i++;
+            dataCenterId = feignInvoke.getDataCenterId();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.info("storeDataCenterId 重试次数：" + i);
+        }
         cache.put(CmcConstants.DATA_CENTER_ID, dataCenterId);
         log.info("数据中心参数更新成功: {}", dataCenterId);
     }
