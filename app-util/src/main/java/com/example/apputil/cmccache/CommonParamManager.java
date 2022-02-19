@@ -130,6 +130,18 @@ public class CommonParamManager {
      */
     public static void storeNoStrategy(boolean needCheck) {
         List<NumberStrategy> list = feignInvoke.getNoStList(needCheck);
+        int i = 0;
+        while (CollectionUtils.isEmpty(list) && i < 3) {
+            i++;
+            list = feignInvoke.getNoStList(needCheck);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.info("storeNoStrategy 重试次数：" + i);
+        }
+
         if (CollectionUtils.isNotEmpty(list)) {
             Map<String, NumberStrategy> map = list.stream().collect(Collectors.toMap(NumberStrategy::getStNo, Function.identity(), (x, y) -> {
                 return y;
