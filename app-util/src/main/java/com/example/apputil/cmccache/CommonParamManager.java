@@ -108,20 +108,10 @@ public class CommonParamManager {
             ThreadPoolManager threadPool = ThreadPoolManager.getInstance();
             threadPool.execute(() -> {
                 try {
+                    storeDataCenterId();
                     storeNoStrategy(false);
                 } catch (Exception e) {
                     log.error("写入流水号策略失败。", e);
-                }
-            });
-        }
-
-        if (types.contains("CENTERDATAID")) {
-            ThreadPoolManager threadPool = ThreadPoolManager.getInstance();
-            threadPool.execute(() -> {
-                try {
-                    storeDataCenterId();
-                } catch (Exception e) {
-                    log.error("写入数据中心参数失败。", e);
                 }
             });
         }
@@ -161,7 +151,7 @@ public class CommonParamManager {
     public static void storeDataCenterId() {
         String dataCenterId = feignInvoke.getDataCenterId();
         cache.put(CmcConstants.DATA_CENTER_ID, dataCenterId);
-        log.info("流数据中心参数更新成功: {}", dataCenterId);
+        log.info("数据中心参数更新成功: {}", dataCenterId);
     }
 
     public static String getAppName() {
