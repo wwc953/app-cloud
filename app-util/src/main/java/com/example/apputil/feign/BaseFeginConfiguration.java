@@ -52,9 +52,11 @@ public class BaseFeginConfiguration {
             }
 
             try {
-                String traceId = ResourceUtil.getCurrentResource();
-                if (StringUtils.isNotBlank(traceId)) {
-                    requestTemplate.header(ResourceUtil.RESOURCE_NAME, URLEncoder.encode(traceId, "UTF-8"));
+                String resourceName = ResourceUtil.getCurrentResource();
+                log.info("BaseFeginConfiguration resourceName ======> {}", resourceName);
+                if (StringUtils.isNotBlank(resourceName)) {
+                    log.info("BaseFeginConfiguration resourceName encode ======> {}", resourceName);
+                    requestTemplate.header(ResourceUtil.RESOURCE_NAME, URLEncoder.encode(resourceName, "UTF-8"));
                 }
             } catch (Exception e) {
                 log.error("获取请求失败，Fegin中不封装资源信息", e);
