@@ -84,7 +84,7 @@ public class CommonParamManager {
                 }
             });
         }
-        if (types.contains("NUMBERSTRATEGY")) {
+        if (types.contains("CENTERDATAID")) {
             syncService.addListener("CMC_ST_NO_DATA_ID", "CMC_PUBLISH", new SyncListener() {
                 @Override
                 public void recevice(String content) {
@@ -115,7 +115,7 @@ public class CommonParamManager {
                 }
             });
         }
-        if (types.contains("NUMBERSTRATEGY")) {
+        if (types.contains("CENTERDATAID")) {
             ThreadPoolManager threadPool = ThreadPoolManager.getInstance();
             threadPool.execute(() -> {
                 try {

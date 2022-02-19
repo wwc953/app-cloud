@@ -16,7 +16,7 @@ public class AutoCacheRunner implements ApplicationRunner {
 
     private List<String> types;
 
-    @Value("${frame.cmccahe.use.type:numberstrategy,rediskeymanager,user,org}")
+    @Value("${frame.cmccahe.use.type:centerdataId,numberstrategy,rediskeymanager,user,org}")
     public void setTypes(String type) {
         try {
             type = type.replace("_", "").toUpperCase();
