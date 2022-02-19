@@ -4,17 +4,14 @@ import com.example.appstaticutil.model.Span;
 import com.example.appstaticutil.model.Tracer;
 import com.example.appstaticutil.json.JsonUtil;
 import com.example.apputil.cmccache.CommonParamManager;
-import com.example.apputil.util.ResourceUtil;
-import com.example.apputil.util.SpringMVCUtil;
+import com.example.apputil.authentication.ResourceUtil;
+import com.example.apputil.authentication.SpringMVCUtil;
 import feign.RequestInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLEncoder;

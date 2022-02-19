@@ -1,4 +1,4 @@
-package com.example.appuser.util;
+package com.example.apputil.authentication;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
