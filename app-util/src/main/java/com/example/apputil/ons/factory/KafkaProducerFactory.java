@@ -36,7 +36,7 @@ public class KafkaProducerFactory {
     }
 
     private KafkaProducer<String, String> createProducer(PRODUCER_TYPE type) {
-        if (type != PRODUCER_TYPE.NORMAL && type != PRODUCER_TYPE.DELAY && type != PRODUCER_TYPE.SHARDING_ORDER) {
+        if (type == PRODUCER_TYPE.TRANSACTION) {
             log.error("PRODUCER_TYPE异常:{}", type);
             return null;
         } else {
