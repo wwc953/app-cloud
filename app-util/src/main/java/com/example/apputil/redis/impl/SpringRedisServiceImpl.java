@@ -1,11 +1,14 @@
 package com.example.apputil.redis.impl;
 
 import com.example.apputil.redis.api.IRedisService;
-import com.example.apputil.redis.service.LocalCacheID;
+import com.example.apputil.redis.model.NumberStrategy;
+import com.example.apputil.redis.service.GenerateIdUtil;
+import com.example.apputil.redis.service.NumberStrategyUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,14 +17,18 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +36,7 @@ import java.util.stream.Collectors;
  * @author: wangwc
  * @date: 2020/11/27 16:01
  */
+@Slf4j
 @Component
 public class SpringRedisServiceImpl implements IRedisService {
     private static final Map<String, String> configMap = null;
@@ -41,7 +49,12 @@ public class SpringRedisServiceImpl implements IRedisService {
     private RedisTemplate template;
 
     @Autowired
-    LocalCacheID localCacheID;
+    GenerateIdUtil generateIdUtil;
+
+    @Autowired
+    NumberStrategyUtil stUtil;
+
+    private static final Pattern p = Pattern.compile("\\{(.*?)\\}");
 
     private final ObjectMapper om = new ObjectMapper();
 
@@ -263,14 +276,50 @@ public class SpringRedisServiceImpl implements IRedisService {
     }
 
     @Override
-    public String getID() {
+    public String getDefaultID() {
         return this.getIDInternal("incr_only_id_default");
     }
 
     @Override
-    public String getID(String stNo, Map<String, String> param) {
-        return localCacheID.getID(stNo, param);
+    public String getDefaultID(String type) {
+        return this.getIDInternal("incr_only_id_" + type);
     }
+
+    @Override
+    public String getID(String stNo, Map<String, String> param) {
+        return generateIdUtil.getID(stNo, param);
+    }
+
+    @Override
+    public List<String> batchGetId(String stNo, Map<String, String> param, Integer count) {
+        Assert.notNull(count, "获取个数不能为空");
+        if (count < 0) {
+            return Collections.emptyList();
+        }
+
+        List<String> rs = new ArrayList<>();
+        log.info("batchGetId 策略编号stNo:{}", stNo);
+        NumberStrategy st = stUtil.getStrategyByStNo(stNo);
+        if (count < 50) {
+            log.info("数量小于50，改为循环从单个获取");
+            for (int i = 0; i < count; i++) {
+                rs.add(this.getID(stNo, param));
+            }
+            return rs;
+        }
+        rs = generateIdUtil.batchGetId(stNo, param, count);
+        return rs;
+    }
+
+    private List<String> resolveContent(String stContent) {
+        List<String> rs = new ArrayList<>();
+        Matcher matcher = p.matcher(stContent);
+        while (matcher.find()) {
+            rs.add(matcher.group(1));
+        }
+        return rs;
+    }
+
 
     private String getIDInternal(String incrId) {
         Date date = new Date();
@@ -372,12 +421,6 @@ public class SpringRedisServiceImpl implements IRedisService {
                 new ConvertingCursor<>(redisConnection.scan(options), redisSerializer::deserialize));
         return cursor;
     }
-
-    @Override
-    public String getID(String type) {
-        return this.getIDInternal("incr_only_id_" + type);
-    }
-
 
     private byte[] rawKey(String key) {
         return key.getBytes(StandardCharsets.UTF_8);

@@ -2,6 +2,7 @@ package com.example.apputil.redis.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.appstaticutil.json.JsonUtil;
 import com.example.apputil.redis.model.NumberStrategy;
 import com.example.apputil.cache.CaffeineCache;
 import com.example.apputil.cmccache.fegin.api.SignerFeign;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -23,7 +25,7 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @Component
-public class LocalCacheID {
+public class GenerateIdUtil {
 
     private static final Pattern p = Pattern.compile("\\{(.*?)\\}");
 
@@ -38,12 +40,11 @@ public class LocalCacheID {
 
     Executor threadPool = Executors.newCachedThreadPool();
 
-    public NumberStrategy getStrategyByStNo(String stNo) {
-        return (NumberStrategy) Optional.ofNullable(cache.hget(CmcConstants.NO_STRATEGY_IN_REDIS, stNo)).orElse(null);
-    }
+    @Autowired
+    NumberStrategyUtil numberStrategyUtil;
 
     public String getID(String stNo, Map<String, String> param) {
-        NumberStrategy st = this.getStrategyByStNo(stNo);
+        NumberStrategy st = numberStrategyUtil.getStrategyByStNo(stNo);
         String stContent = st.getStContent();
         List<String> contentArr = resolveContent(stContent);
         StringBuilder sb = new StringBuilder();
@@ -55,6 +56,48 @@ public class LocalCacheID {
             sb.append(tmpRs == null ? "" : tmpRs);
         });
         return sb.toString();
+    }
+
+    public List<String> batchGetId(String stNo, Map<String, String> param, Integer count) {
+        List<String> rs = new ArrayList<>();
+        NumberStrategy st = numberStrategyUtil.getStrategyByStNo(stNo);
+        String stContent = st.getStContent();
+        List<String> contentArr = resolveContent(stContent);
+        StringBuilder sb = new StringBuilder();
+        contentArr.forEach(t -> {
+            String tmpRs = generateCode(t, st, param == null ? null : param.get(t), null, false, false);
+            if (tmpRs == null && log.isInfoEnabled()) {
+                log.info("batchGetId 策略编号stNo:{}中,{}项的值解析失败，将被忽略,", stNo, t);
+            }
+            sb.append(tmpRs == null ? "" : tmpRs);
+        });
+
+        List<Long> ids = batchGenerateId(st, count, false);
+        String rsId = sb.toString();
+        Long noLength = st.getNoLength();
+        if (contentArr.contains("NO")) {
+            ids.forEach(id -> {
+                rs.add(MessageFormat.format(rsId, processDigit(noLength.intValue(), String.valueOf(id))));
+            });
+        } else if (contentArr.contains("no")) {
+            ids.forEach(id -> {
+                rs.add(MessageFormat.format(rsId, String.valueOf(id)));
+            });
+        }
+        return rs;
+    }
+
+    public List<Long> batchGenerateId(NumberStrategy strategy, int count, boolean isHex) {
+        Map map = JsonUtil.convertJsonToMap(JsonUtil.convertObjectToJson(strategy));
+        if (count > 0) {
+            map.put("count", count);
+        }
+        if (isHex) {
+            map.put("hex", "1");
+        }
+        String res = Optional.of(feign.batchGenerateId(map)).get();
+        Map rs = JsonUtil.convertJsonToMap(res);
+        return convertMapToQueue(rs);
     }
 
     private String generateCode(String format, NumberStrategy st, String valueFromParam, Integer count, boolean isBatch, boolean isHex) {

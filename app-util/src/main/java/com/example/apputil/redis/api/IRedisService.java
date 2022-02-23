@@ -99,12 +99,24 @@ public interface IRedisService {
 
     Long getExpire(String key);
 
-    String getID();
-
     //2.0
     String getID(String stNo, Map<String, String> param);
 
-    String getID(String type);
+    //2.0
+    List<String> batchGetId(String stNo, Map<String, String> param, Integer count);
+
+    /**
+     * 默认自增
+     * @return
+     */
+    String getDefaultID();
+
+    /**
+     *
+     * @param type
+     * @return
+     */
+    String getDefaultID(String type);
 
     Map<String, Object> getMapByKeyLike(String pattern);
 
