@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,10 +30,12 @@ import java.util.stream.Collectors;
  * @date: 2020/11/27 16:01
  */
 @Component
-public class SpringRedisServiceImpl implements IRedisService, InitializingBean {
+public class SpringRedisServiceImpl implements IRedisService {
     private static final Map<String, String> configMap = null;
+
     @Value("${dataCenter.url:http://localhost:8088}")
     String dataCenterUrl;
+
     @Autowired
     @Qualifier("cacheRedisTemplate")
     private RedisTemplate template;
@@ -377,15 +378,6 @@ public class SpringRedisServiceImpl implements IRedisService, InitializingBean {
         return this.getIDInternal("incr_only_id_" + type);
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-//        if (configMap == null) {
-//            String config = HttpClient.requestOtherProject(this.dataCenterUrl);
-//            if (!StringUtils.isEmpty(config) && !config.contains("404 Not Found")) {
-//                configMap = (Map) JsonUtil.gson.fromJson(config, HashMap.class);
-//            }
-//        }
-    }
 
     private byte[] rawKey(String key) {
         return key.getBytes(StandardCharsets.UTF_8);
