@@ -47,7 +47,7 @@ public class ThreadPoolManager {
                     Thread.currentThread().getThreadGroup();
             namePrefix = "app-" +
                     poolNumber.getAndIncrement() +
-                    "-th-";
+                    "-thread-";
         }
 
         public Thread newThread(Runnable r) {
