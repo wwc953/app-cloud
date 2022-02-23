@@ -3,10 +3,11 @@ package com.example.apputil.redis.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.appstaticutil.json.JsonUtil;
-import com.example.apputil.redis.model.NumberStrategy;
+import com.example.appstaticutil.threadpool.ThreadPoolManager;
 import com.example.apputil.cache.CaffeineCache;
 import com.example.apputil.cmccache.fegin.api.SignerFeign;
 import com.example.apputil.constants.CmcConstants;
+import com.example.apputil.redis.model.NumberStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,8 +19,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,7 +37,7 @@ public class GenerateIdUtil {
     @Autowired
     SignerFeign feign;
 
-    Executor threadPool = Executors.newCachedThreadPool();
+    ThreadPoolManager threadPool = ThreadPoolManager.getInstance();
 
     @Autowired
     NumberStrategyUtil numberStrategyUtil;
