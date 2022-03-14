@@ -10,5 +10,5 @@ public @interface AppCache {
 
     String value() default "defaultValue";
 
-    int expir() default -1;
+    int expire() default -1;
 }
