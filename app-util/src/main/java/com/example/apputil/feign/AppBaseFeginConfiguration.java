@@ -23,7 +23,7 @@ import java.util.UUID;
  */
 @Configuration
 @Slf4j
-public class BaseFeginConfiguration {
+public class AppBaseFeginConfiguration {
 
     public static final String APP_NAME = "APP_NAME";
     public static final String USER_INFO = "userInfo";
@@ -33,7 +33,7 @@ public class BaseFeginConfiguration {
     private SpringMVCUtil requestUtil;
 
     @Bean
-    public RequestInterceptor baseInterceptor() {
+    public RequestInterceptor appRequestInterceptor() {
 
         RequestInterceptor interceptor = (requestTemplate) -> {
             try {
@@ -47,7 +47,7 @@ public class BaseFeginConfiguration {
 
             try {
                 String resourceName = ResourceUtil.getCurrentResource();
-                log.info("BaseFeginConfiguration resourceName ======> {}", resourceName);
+                log.info("appRequestInterceptor resourceName ======> {}", resourceName);
                 if (StringUtils.isNotBlank(resourceName)) {
                     requestTemplate.header(ResourceUtil.RESOURCE_NAME, URLEncoder.encode(resourceName, "UTF-8"));
                 }

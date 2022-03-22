@@ -30,8 +30,8 @@ public class FeignClientConfig {
     private String signerName;
 
     @Autowired
-    @Qualifier("baseInterceptor")
-    private RequestInterceptor baseInterceptor;
+    @Qualifier("appRequestInterceptor")
+    private RequestInterceptor appRequestInterceptor;
 
     @Bean
     public SignerFeign signerFeign(Decoder decoder, Encoder encoder, ErrorDecoder errorDecoder) {
@@ -40,7 +40,7 @@ public class FeignClientConfig {
                 .decoder(decoder)
                 .errorDecoder(errorDecoder)
                 .client(this.feignClient)
-                .requestInterceptor(baseInterceptor)
+                .requestInterceptor(appRequestInterceptor)
                 .retryer(Retryer.NEVER_RETRY)
                 .target(SignerFeign.class, "http://" + this.signerName + "/", new SignerFeignFallBack());
     }
