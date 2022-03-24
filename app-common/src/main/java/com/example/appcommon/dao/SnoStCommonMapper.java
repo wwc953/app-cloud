@@ -1,10 +1,13 @@
 package com.example.appcommon.dao;
 
 import com.example.appcommon.model.SnoSt;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.jmx.export.annotation.ManagedOperationParameter;
 
 import java.util.List;
 import java.util.Map;
 
+@Mapper
 public interface SnoStCommonMapper {
 
     int insert(SnoSt record);

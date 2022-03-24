@@ -8,7 +8,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableDiscoveryClient
 @EnableSwagger2
-@MapperScan(basePackages = {"com.example.appcommon.dao"})
+//@MapperScan(basePackages = {"com.example.appcommon.dao"})
 @SpringBootApplication(scanBasePackages = {"com.example.appcommon", "com.example.apputil.*"})
 public class AppcommonApplication {
 
