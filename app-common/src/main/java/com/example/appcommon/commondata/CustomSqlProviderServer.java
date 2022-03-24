@@ -1,7 +1,8 @@
-package com.example.appcommon.groovy;
+package com.example.appcommon.commondata;
 
 import com.alibaba.fastjson.JSON;
-import com.example.appcommon.groovy.customsql.CustomSqlMapper;
+import com.example.appcommon.commondata.customsql.CustomSqlMapper;
+import com.example.appcommon.groovy.GroovyLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -76,7 +77,7 @@ public class CustomSqlProviderServer {
      * @param beforeSQL    select * from table t where t.bb is nou null <if test="mgtOrgCode!=null && mgtOrgCode!=''"> and t.mgtOrgCode = #{mgtOrgCode} </if> <if test="aa!=null && aa!=''"> and t.aa=#{aa} </if>
      * @param apiParamJson {"mgtOrgCode":"","aa":""}
      */
-    void getLabelSql(Map<String, Object> params, String beforeSQL, String apiParamJson) {
+    public void getLabelSql(Map<String, Object> params, String beforeSQL, String apiParamJson) {
         try {
             beforeSQL = beforeSQL.trim();
             String replaceAll = beforeSQL.replaceAll("&&", "&amp;&amp;");
@@ -121,7 +122,7 @@ public class CustomSqlProviderServer {
                 try {
                     parseWithBinding = GroovyLoader.parseWithBinding(attributeValue, params);
                 } catch (Exception e) {
-                    throw new RuntimeException("dealLabels解析配置失败，请检查配置", e);
+                    throw new RuntimeException("dealLabels解析配置失败", e);
                 }
                 if (parseWithBinding.equals(true)) {
                     dealLabels(next, params);
@@ -140,6 +141,26 @@ public class CustomSqlProviderServer {
      */
     private List<Map<String, Object>> docustomSql(Map<String, Object> params) {
         return customSqlMapper.docustomSql(params);
+    }
+
+    /**
+     * 真正 执行查询语句 带分页
+     *
+     * @param params
+     * @return
+     */
+    private List<Map<String, Object>> docustomSqlByPage(Map<String, Object> params) {
+        return customSqlMapper.docustomSqlByPage(params);
+    }
+
+    /**
+     * 获取个数
+     *
+     * @param params
+     * @return
+     */
+    private Integer docustomSqlGetTotal(Map<String, Object> params) {
+        return customSqlMapper.docustomSqlGetTotal(params);
     }
 
 }
