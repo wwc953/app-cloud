@@ -33,6 +33,14 @@ public class CustomSqlProviderServer {
         return res;
     }
 
+    /**
+     * 判断是否有in和like
+     *
+     * @param apiParams
+     * @param paramNamesList
+     * @param valSql
+     * @return
+     */
     private String dealInOrLikeCondition(Map<String, Object> apiParams, List<String> paramNamesList, String valSql) {
         for (String paramName : paramNamesList) {
             String parastr = "#{" + paramName + "}";
@@ -107,7 +115,7 @@ public class CustomSqlProviderServer {
     }
 
     /**
-     * 解析 if标签
+     * 解析if标签，去除无效if
      *
      * @param rootElement
      * @param params
@@ -139,7 +147,7 @@ public class CustomSqlProviderServer {
      * @param params
      * @return
      */
-    private List<Map<String, Object>> docustomSql(Map<String, Object> params) {
+    public List<Map<String, Object>> docustomSql(Map<String, Object> params) {
         return customSqlMapper.docustomSql(params);
     }
 
@@ -149,7 +157,7 @@ public class CustomSqlProviderServer {
      * @param params
      * @return
      */
-    private List<Map<String, Object>> docustomSqlByPage(Map<String, Object> params) {
+    public List<Map<String, Object>> docustomSqlByPage(Map<String, Object> params) {
         return customSqlMapper.docustomSqlByPage(params);
     }
 
@@ -159,7 +167,7 @@ public class CustomSqlProviderServer {
      * @param params
      * @return
      */
-    private Integer docustomSqlGetTotal(Map<String, Object> params) {
+    public Integer docustomSqlGetTotal(Map<String, Object> params) {
         return customSqlMapper.docustomSqlGetTotal(params);
     }
 
