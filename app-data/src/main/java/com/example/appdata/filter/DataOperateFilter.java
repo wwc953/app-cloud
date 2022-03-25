@@ -54,6 +54,7 @@ public class DataOperateFilter implements Filter {
             log.info("当前请求路径:{}", uri);
             log.info("当前接受参数:{}", paramStr);
             DataOperation operaConfig = getOperaConfig(uri);
+            log.info("getOperaConfig:---->{}", JsonUtil.convertObjectToJson(operaConfig));
             ResponseResult<Object> responseResult = null;
             if (operaConfig == null) {
                 responseResult = ResultUtils.warpResult("-1", "未找到对应路径");
@@ -62,6 +63,7 @@ public class DataOperateFilter implements Filter {
                 ResponseResult executePost = null;
                 if (!"0".equals(operaConfig.getOpType()) && !"01".equals(operaConfig.getOpType())) {
                     //TODO
+
                 } else {
                     // 查询
                     executePost = customSqlProviderServer.executeQuery(paramStr, operaConfig);
@@ -107,9 +109,14 @@ public class DataOperateFilter implements Filter {
                     sb.append("'").append(detail.getDataModelObhjName().toUpperCase()).append("'").append(",");
                 }
                 sb.deleteCharAt(sb.length() - 1);
-                getDataColumnType(columns, conditions, params);
+
+//                getDataColumnTypeOracle(columns, conditions, params);
+                getDataColumnTypeMySQL(columns, conditions, params);
+
                 params.put("tabName", sb.toString());
-                List<Map<String, Object>> tabColumns = providerService.selectColumnType(params);
+//                List<Map<String, Object>> tabColumns = providerService.selectColumnTypeOracle(params);
+                List<Map<String, Object>> tabColumns = providerService.selectColumnTypeMySQL(params);
+
                 if (tabColumns != null && tabColumns.size() > 0) {
                     Map<String, Map<String, String>> tabColMap = new HashMap<>(32);
                     Iterator<Map<String, Object>> iterator = tabColumns.iterator();
@@ -134,7 +141,7 @@ public class DataOperateFilter implements Filter {
         return dataOperation;
     }
 
-    private void getDataColumnType(Map<String, String> columns, Map<String, String> conditions, Map<String, Object> params) {
+    private void getDataColumnTypeOracle(Map<String, String> columns, Map<String, String> conditions, Map<String, Object> params) {
         columns.clear();
         conditions.clear();
         columns.put("tableName", "table_Name");
@@ -143,6 +150,21 @@ public class DataOperateFilter implements Filter {
         conditions.put("tabName", "table_Name");
         params.put("columns", columns);
         params.put("tableName", "all_tab_cols");
+//        SELECT data_type as "columnType", table_Name as "tableName", column_Name as "columnName" FROM all_tab_cols WHERE (table_Name in ('REDIS_AUTH_MGT'))
+        params.put("conditions", conditions);
+    }
+
+    private void getDataColumnTypeMySQL(Map<String, String> columns, Map<String, String> conditions, Map<String, Object> params) {
+        columns.clear();
+        conditions.clear();
+        columns.put("tableName", "table_Name");
+        columns.put("columnName", "column_Name");
+        columns.put("columnType", "data_type");
+        conditions.put("tabName", "table_Name");
+        params.put("columns", columns);
+//        params.put("tableName", "all_tab_cols");
+        params.put("tableName", "information_schema.columns");
+//        select COLUMN_NAME,DATA_TYPE,COLUMN_COMMENT from information_schema.columns where TABLE_NAME='表名'
         params.put("conditions", conditions);
     }
 
