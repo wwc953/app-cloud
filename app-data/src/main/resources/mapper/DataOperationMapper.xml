@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.appdata.dao.dataopera.DataOperationMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.appdata.model.DataOperation">
+        <id column="API_ID" property="apiID"/>
+        <result column="CENTER_NAME" property="centerName"/>
+        <result column="API_NAME" property="apiName"/>
+        <result column="API_PATH" property="apiPath"/>
+        <result column="OP_TYPE" property="opType"/>
+        <result column="CALL_SOURCE" property="callSource"/>
+        <result column="API_PARAM" property="apiParam"/>
+        <result column="AFTER_SQL" property="afterSQL"/>
+        <result column="BEFORE_SQL" property="beforeSQL"/>
+        <result column="SQL_PARAM" property="sqlParam"/>
+        <collection property="cDataSrvRelaDOList" column="api_id = api_id" select="getOperaDetail"/>
+    </resultMap>
+
+    <resultMap id="operaDetails" type="com.example.appdata.model.OperaDetail">
+        <id column="RELA_ID" property="relaID"/>
+        <result column="API_ID" property="apiID"/>
+        <result column="FLD_TYPE_OBHJ_NAME" property="fldTypeObhjName"/>
+        <result column="DATA_MODEL_OBHJ_NAME" property="dataModelObhjName"/>
+        <result column="DATA_OBJ_ID" property="dataObjID"/>
+        <result column="RELA_DATA_OBJ_ID" property="relaDataObjID"/>
+        <result column="ATTR_MAPPING" property="attrMapping"/>
+        <result column="SQL_LOGIC" property="sqlLogic"/>
+        <result column="SQL_CONDITION" property="sqlCondition"/>
+        <result column="SQL_SORT" property="sqlSort"/>
+        <result column="RELA_MAPPING" property="relaMapping"/>
+    </resultMap>
+
+    <!-- 配置详情信息 -->
+    <select id="getOperaDetail" resultMap="operaDetails">
+        select * from c_data_srv_rela where api_id=#{api_id} order by sql_sort
+    </select>
+
+    <!-- 配置主信息 -->
+    <select id="getDataOperationByUri" resultMap="BaseResultMap">
+        select * from center_data_api where api_path=#{uri}
+    </select>
+
+    <select id="getDataOperationByUris" resultMap="BaseResultMap">
+        select * from center_data_api
+        where api_path in
+        <foreach collection="uriList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+</mapper>
