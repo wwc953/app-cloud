@@ -2,7 +2,7 @@ package com.example.appcommon.commondata;
 
 import com.alibaba.fastjson.JSON;
 import com.example.appcommon.commondata.customsql.CustomSqlMapper;
-import com.example.appcommon.groovy.GroovyLoader;
+import com.example.appstaticutil.groovy.GroovyLoader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;

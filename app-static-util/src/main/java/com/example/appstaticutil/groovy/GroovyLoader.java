@@ -1,4 +1,4 @@
-package com.example.appcommon.groovy;
+package com.example.appstaticutil.groovy;
 
 import javax.script.*;
 import java.util.Map;
