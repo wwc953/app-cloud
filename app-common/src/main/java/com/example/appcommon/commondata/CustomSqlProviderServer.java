@@ -3,6 +3,7 @@ package com.example.appcommon.commondata;
 import com.alibaba.fastjson.JSON;
 import com.example.appcommon.commondata.customsql.CustomSqlMapper;
 import com.example.appcommon.groovy.GroovyLoader;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -14,6 +15,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 @Component
 public class CustomSqlProviderServer {
 
@@ -29,7 +31,7 @@ public class CustomSqlProviderServer {
             paramNames.add(m.group().substring(2, m.group().length() - 1));
         }
         String res = dealInOrLikeCondition(apiParams, paramNames, valSql);
-        System.out.println("dealSqlStr: " + res);
+        log.debug("dealSqlStr: {}", res);
         return res;
     }
 
@@ -104,9 +106,9 @@ public class CustomSqlProviderServer {
             }
 
             String valSQL = rootElement.getStringValue();
-            System.out.println("valSQL ===> " + valSQL);
+            log.debug("valSQL ===> {}", valSQL);
             String finalSQL = dealSqlStr(valSQL, apiParams);
-            System.out.println("finalSQL ==> " + finalSQL);
+            log.info("finalSQL ==> {}", finalSQL);
             params.put("finalSQL", finalSQL);
 
         } catch (Exception e) {
@@ -171,4 +173,29 @@ public class CustomSqlProviderServer {
         return customSqlMapper.docustomSqlGetTotal(params);
     }
 
+    /**
+     * MySQL
+     *
+     * @param param
+     * @return
+     */
+    public List<Map<String, Object>> docustomSqlMySQL(Map<String, Object> param) {
+        return customSqlMapper.docustomSqlMySQL(param);
+    }
+
+    /**
+     * MySQL 分页
+     *
+     * @param params
+     * @return
+     */
+    public List<Map<String, Object>> docustomSqlByPageMySQL(Map<String, Object> params) {
+        Integer pageSize = (Integer) params.get("pageSize");
+        Integer pageNo = (Integer) params.get("pageNo");
+        if (pageNo < 1) {
+            pageNo = 1;
+        }
+        params.put("beginIndex", (pageNo - 1) * pageSize);
+        return customSqlMapper.docustomSqlByPageMySQL(params);
+    }
 }

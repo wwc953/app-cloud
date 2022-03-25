@@ -18,4 +18,10 @@ public interface CustomSqlMapper {
     @SelectProvider(type = CustomSqlProvider.class, method = "docustomSqlGetTotal")
     Integer docustomSqlGetTotal(Map<String, Object> paramMap);
 
+    @SelectProvider(type = CustomSqlProvider.class, method = "docustomSqlMySQL")
+    List<Map<String, Object>> docustomSqlMySQL(Map<String, Object> paramMap);
+
+    @SelectProvider(type = CustomSqlProvider.class, method = "docustomSqlByPageMySQL")
+    List<Map<String, Object>> docustomSqlByPageMySQL(Map<String, Object> paramMap);
+
 }

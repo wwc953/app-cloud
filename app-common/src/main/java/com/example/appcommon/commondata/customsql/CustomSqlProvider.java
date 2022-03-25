@@ -1,10 +1,13 @@
 package com.example.appcommon.commondata.customsql;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Component;
+import scala.reflect.internal.Trees;
 
 import java.util.Map;
 
+@Slf4j
 @Component
 public class CustomSqlProvider {
 
@@ -12,7 +15,7 @@ public class CustomSqlProvider {
         String docustomSql = map.get("finalSQL").toString();
         String pageSql = new SQL() {
             {
-                SELECT("t*, rownum as rn");
+                SELECT("t.*, rownum as rn");
                 FROM("(" + docustomSql + ") t");
                 WHERE("rownum <=2000 ");
             }
@@ -20,11 +23,23 @@ public class CustomSqlProvider {
         return pageSql;
     }
 
+    public String docustomSqlMySQL(Map<String, Object> map) {
+        String docustomSql = map.get("finalSQL").toString();
+        String pageSql = new SQL() {
+            {
+                SELECT("t.*");
+                FROM("(" + docustomSql + ") t limit  2000");
+            }
+        }.toString();
+        log.info("docustomSqlMySQL==>{}", pageSql);
+        return pageSql;
+    }
+
     public String docustomSqlByPage(Map<String, Object> map) {
         String docustomSql = map.get("finalSQL").toString();
         String pageSql = new SQL() {
             {
-                SELECT("t*, rownum as rn");
+                SELECT("t.*, rownum as rn");
                 FROM("(" + docustomSql + ") t");
                 WHERE("rownum <= (#{pageNo})*#{pageSize} ");
             }
@@ -37,6 +52,18 @@ public class CustomSqlProvider {
             }
         }.toString();
         return resultSql;
+    }
+
+    public String docustomSqlByPageMySQL(Map<String, Object> map) {
+        String docustomSql = map.get("finalSQL").toString();
+        String pageSql = new SQL() {
+            {
+                SELECT("t.*");
+                FROM("(" + docustomSql + ") t limit #{beginIndex},#{pageSize}");
+            }
+        }.toString();
+        log.info("docustomSqlByPageMySQL ==> {}", pageSql);
+        return pageSql;
     }
 
     public String docustomSqlGetTotal(Map<String, Object> map) {
