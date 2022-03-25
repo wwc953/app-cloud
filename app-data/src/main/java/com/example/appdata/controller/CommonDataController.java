@@ -1,7 +1,6 @@
-package com.example.appcommon.controller;
+package com.example.appdata.controller;
 
-
-import com.example.appcommon.commondata.CustomSqlProviderServer;
+import com.example.appdata.dao.CustomSqlProviderServer;
 import com.example.appstaticutil.json.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

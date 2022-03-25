@@ -1,10 +1,8 @@
-package com.example.appcommon.commondata.customsql;
+package com.example.appdata.dao.customsql;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Component;
-import scala.reflect.internal.Trees;
-
 import java.util.Map;
 
 @Slf4j

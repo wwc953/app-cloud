@@ -1,7 +1,7 @@
-package com.example.appcommon.commondata;
+package com.example.appdata.dao;
 
 import com.alibaba.fastjson.JSON;
-import com.example.appcommon.commondata.customsql.CustomSqlMapper;
+import com.example.appdata.dao.customsql.CustomSqlMapper;
 import com.example.appstaticutil.groovy.GroovyLoader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

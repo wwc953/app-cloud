@@ -36,6 +36,7 @@
         <module>app-common</module>
         <module>app-util</module>
         <module>app-static-util</module>
+        <module>app-data</module>
     </modules>
 
     <dependencyManagement>

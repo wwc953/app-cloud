@@ -1,4 +1,4 @@
-package com.example.appcommon.commondata.customsql;
+package com.example.appdata.dao.customsql;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
