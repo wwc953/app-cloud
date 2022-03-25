@@ -23,7 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
-@WebFilter(urlPatterns = {"/*"}, filterName = "dataOperaFilter")
+@WebFilter(urlPatterns = {"/*"}, filterName = "myDataOperaFilter")
 public class DataOperateFilter implements Filter {
 
     DataOperationMapper dataOperationMapper;

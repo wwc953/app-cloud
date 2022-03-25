@@ -350,10 +350,13 @@ public class CustomSqlProviderServer {
      * @return
      */
     public List<Map<String, Object>> docustomSqlByPageMySQL(Map<String, Object> params) {
-        Integer pageSize = (Integer) params.get("pageSize");
-        Integer pageNo = (Integer) params.get("pageNo");
+        Integer pageSize = Integer.valueOf(String.valueOf(params.get("pageSize")));
+        Integer pageNo = Integer.valueOf(String.valueOf(params.get("pageNo")));
         if (pageNo < 1) {
             pageNo = 1;
+        }
+        if (pageSize < 1) {
+            pageSize = 10;
         }
         params.put("beginIndex", (pageNo - 1) * pageSize);
         return customSqlMapper.docustomSqlByPageMySQL(params);
