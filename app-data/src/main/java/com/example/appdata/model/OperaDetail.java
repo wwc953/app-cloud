@@ -6,6 +6,7 @@ public class OperaDetail {
     private BigDecimal relaID;
     private BigDecimal apiID;
     private String fldTypeObhjName;
+    private String dataModelObhjName;
     private String dataObjID;
     private String relaDataObjID;
     private String attrMapping;
@@ -14,6 +15,14 @@ public class OperaDetail {
     private String sqlSort;
     private String relaMapping;
     private String operateType;
+
+    public String getDataModelObhjName() {
+        return dataModelObhjName;
+    }
+
+    public void setDataModelObhjName(String dataModelObhjName) {
+        this.dataModelObhjName = dataModelObhjName;
+    }
 
     public BigDecimal getRelaID() {
         return relaID;

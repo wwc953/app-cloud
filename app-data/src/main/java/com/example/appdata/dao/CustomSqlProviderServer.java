@@ -49,6 +49,7 @@ public class CustomSqlProviderServer {
         }
         String opType = operaConfig.getOpType();
         if ("01".equals(opType)) {
+            //自定义标签 if
             getLabelSql(params, operaConfig);
         } else {
             getCommonSql(params, operaConfig);
@@ -56,7 +57,8 @@ public class CustomSqlProviderServer {
 
         String oneFlag = params.get("queryType") == null ? "many" : params.get("queryType").toString();
         // 分页数据
-        if (params.containsKey("pageSize") && params.get("pageSize") != null && "null".equals(params.get("pageSize"))) {
+        log.error("执行参数:{}", JsonUtil.convertObjectToJson(params));
+        if (params.containsKey("pageSize") && params.get("pageSize") != null && !"null".equals(params.get("pageSize"))) {
             if (params.get("pageNo") != null || "null".equals(params.get("pageNo"))) {
                 params.put("pageNo", 1);
             }
@@ -64,7 +66,7 @@ public class CustomSqlProviderServer {
             Integer total = docustomSqlGetTotal(params);
             if ("one".equals(oneFlag)) {
                 if (docustomSqlByPageMySQL != null && docustomSqlByPageMySQL.size() > 0) {
-                    Map res = (Map) docustomSqlByPageMySQL.get(0);
+                    Map res = docustomSqlByPageMySQL.get(0);
                     EntityUtils.clobToString(res);
                     return ResultUtils.warpResult(res, total);
                 }
@@ -79,7 +81,7 @@ public class CustomSqlProviderServer {
             List<Map> docustomSqlMySQL = docustomSqlMySQL(params);
             if ("one".equals(oneFlag)) {
                 if (docustomSqlMySQL != null && docustomSqlMySQL.size() > 0) {
-                    Map res = (Map) docustomSqlMySQL.get(0);
+                    Map res = docustomSqlMySQL.get(0);
                     EntityUtils.clobToString(res);
                     return ResultUtils.warpResult(res);
                 }
