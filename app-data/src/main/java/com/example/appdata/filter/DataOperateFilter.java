@@ -14,6 +14,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -22,7 +23,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class MyDataOperateFilter implements Filter {
+@WebFilter(urlPatterns = {"/*"}, filterName = "dataOperaFilter")
+public class DataOperateFilter implements Filter {
 
     DataOperationMapper dataOperationMapper;
     CustomSqlProviderServer customSqlProviderServer;
