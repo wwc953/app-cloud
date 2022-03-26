@@ -60,7 +60,7 @@ public class DataOperateFilter implements Filter {
                 responseResult = ResultUtils.warpResult("-1", "未找到对应路径");
                 writeResult(res, responseResult, false);
             } else {
-                ResponseResult executePost = null;
+                Object executePost = null;
                 if (!"0".equals(operaConfig.getOpType()) && !"01".equals(operaConfig.getOpType())) {
                     if ("1".equals(operaConfig.getOpType())) {
                         if (operaConfig.getColTypes() == null) {
