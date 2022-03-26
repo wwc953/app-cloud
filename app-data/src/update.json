@@ -1,0 +1,11 @@
+请求: http://124.223.82.36:9100/inner/RedisAuthMgtRoot
+入参样例：
+{
+  "RedisAuthMgtRoot": {
+    "operateType": "update",
+    "redisAuthMgtID": "4444",
+    "redisMgtID": "5555",
+    "setAuth": "5555",
+    "getAuth": "5555"
+  }
+}
