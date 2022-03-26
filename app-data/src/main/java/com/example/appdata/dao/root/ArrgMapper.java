@@ -23,4 +23,7 @@ public interface ArrgMapper {
 
     @SelectProvider(type = AggrProvider.class, method = "selectAll")
     List<Map<String, Object>> selectPublic(Map<String, Object> params);
+
+    @SelectProvider(type = AggrProvider.class, method = "updateMysql")
+    void updateMysql(Map<String, Object> params);
 }

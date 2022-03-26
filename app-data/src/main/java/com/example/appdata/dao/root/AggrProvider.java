@@ -125,6 +125,40 @@ public class AggrProvider {
         return sql;
     }
 
+    public String updateMysql(Map<String, Object> map) {
+        Map<String, String> columns = (Map<String, String>) map.get("columns");
+        Set<Map.Entry<String, String>> entrySet = columns.entrySet();
+        Map<String, String> conditions = (Map<String, String>) map.get("conditions");
+        Set<Map.Entry<String, String>> entrySet2 = conditions.entrySet();
+        Map<String, String> tabColumns = (Map<String, String>) map.get("tabColumns");
+
+        String sql = new SQL() {{
+            UPDATE(map.get("tableName").toString());
+            Iterator<Map.Entry<String, String>> iterator = entrySet.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, String> entry = iterator.next();
+                String key = entry.getKey();
+                String columnType = tabColumns.get(key);
+                if ("DATE".equals(columnType) && entry.getValue() != null) {
+                    SET(entry.getKey() + "to_date(#{" + entry.getValue() + "},'yyyy-MM-dd hh24:mi:ss')");
+                } else if (columnType.startsWith("TIMESTAMP") && entry.getValue() != null) {
+                    SET(entry.getKey() + "to_timestamp(#{" + entry.getValue() + "},'yyyy-MM-dd hh24:mi:ss')");
+                } else {
+                    SET(entry.getKey() + "=#{" + entry.getValue() + "}");
+                }
+            }
+
+            Iterator<Map.Entry<String, String>> entryIterator = entrySet2.iterator();
+            while (entryIterator.hasNext()) {
+                Map.Entry<String, String> entry = entryIterator.next();
+                WHERE(entry.getKey() + "=#{" + entry.getValue() + "}");
+            }
+
+        }}.toString();
+        log.error("updateMysql sql==={}", sql);
+        return sql;
+    }
+
     public String selectAll(Map<String, Object> map) {
         Map<String, String> columns = (Map<String, String>) map.get("columns");
         Set<Map.Entry<String, String>> entrySet = columns.entrySet();

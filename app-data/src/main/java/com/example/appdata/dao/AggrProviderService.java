@@ -200,6 +200,11 @@ public class AggrProviderService {
                 Map<String, JSONObject> curent = dataModel.getCurent();
                 curent.put(table, jsonObject);
                 dataModel.setCurent(curent);
+                log.info("执行update解析...");
+                log.info("jsonObject:{}", JsonUtil.convertObjectToJson(jsonObject));
+                log.info("attrMappJson:{} ", JsonUtil.convertObjectToJson(attrMappJson));
+                log.info("operaDetail:{}", JsonUtil.convertObjectToJson(operaDetail));
+                log.info("dataModel:{}", JsonUtil.convertObjectToJson(dataModel));
                 analysisUpdate(table, jsonObject, attrMappJson, operaDetail, dataModel);
             } else {
                 if (!"delete".equals(operateType)) {
@@ -233,8 +238,146 @@ public class AggrProviderService {
     private void analysisDelete(Map<String, Object> params, OperaDetail operaDetail, Map<String, Object> conditionMap, Map<String, List<OperaDetail>> poConfigMapping) {
     }
 
+//    private void analysisUpdate(String table, JSONObject jsonObject, JSONObject attrMappJson, OperaDetail operaDetail, DataModel dataModel) {
+//        Map<String, List<OperaDetail>> doConfigMapping = dataModel.getDoConfigMapping();
+//        Map<String, Object> conditionMap = new HashMap<>();
+//        Map<String, Object> params = new HashMap<>();
+//        Map<String, Object> hashMap = new HashMap<>();
+//        String po = operaDetail.getDataModelObhjName();
+//        params.put("tableName", po);
+//        String pk = operaDetail.getDataObjID();
+//        boolean idFlag = true;
+//
+//        Iterator keys = jsonObject.keys();
+//
+//        String key;
+//        Object val;
+//        labe17:
+//        while (true) {
+//            while (true) {
+//                do {
+//                    if (!keys.hasNext()) {
+//                        if (idFlag) {
+//                            throw new RuntimeException("传参有误，未找到配置唯一标识");
+//                        }
+//                        if (hashMap.size() > 0) {
+//                            Map<String, Map<String, String>> colTypes = dataModel.getColTypes();
+//                            params.put("conditions", conditionMap);
+//                            params.put("columns", hashMap);
+//                            params.put("tabColumns", colTypes.get(po));
+//                            doUpdate(params);
+//                        }
+//                        return;
+//                    }
+//                    key = keys.next().toString();
+//
+//                } while ("operateType".equals(key));
+//
+//                Object object = jsonObject.get(key);
+//                if (attrMappJson.containsKey(key)) {
+//                    val = jsonObject.get(key);
+//                    if (pk.equals(attrMappJson.getString(key))) {
+//                        conditionMap.put(attrMappJson.getString(key), key);
+//                        idFlag = false;
+//                        break labe17;
+//                    }
+//                    if (val != null && !"null".equals(String.valueOf(val))) {
+//                        hashMap.put(attrMappJson.getString(key), key);
+//                        break labe17;
+//                    }
+//                } else {
+//                    if (object instanceof JSONArray) {
+//                        JSONArray obAry = (JSONArray) object;
+//                        String subTab = table + "." + key;
+//                        if (!doConfigMapping.containsKey(subTab)) {
+//                            log.error("传入的数据中{}是一个数组，但未找到对应的配置表信息");
+//                            continue;
+//                        }
+//
+//                        if (obAry.size() < 1) continue;
+//
+//                        for (Object obj : obAry) {
+//                            analysisJson(subTab, obj, dataModel);
+//                        }
+//                    }
+//
+//                    if (object instanceof JSONObject) {
+//                        analysisJson(table + "." + key, object, dataModel);
+//                    }
+//                }
+//            }
+//        }
+//
+//        if ("".equals(String.valueOf(val))) {
+//            params.put(key, null);
+//        } else {
+//            params.put(key, jsonObject.getString(key));
+//        }
+//    }
+
     private void analysisUpdate(String table, JSONObject jsonObject, JSONObject attrMappJson, OperaDetail operaDetail, DataModel dataModel) {
+        Map<String, List<OperaDetail>> doConfigMapping = dataModel.getDoConfigMapping();
+        Map<String, Object> conditionMap = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> hashMap = new HashMap<>();
+        String po = operaDetail.getDataModelObhjName();
+        params.put("tableName", po);
+        String pk = operaDetail.getDataObjID();
+        boolean idFlag = true;
+
+        Iterator keys = jsonObject.keys();
+
+        String subTab;
+        JSONArray obAry = null;
+        labe17:
+        do {
+            while (keys.hasNext()) {
+                String key = keys.next().toString();
+                Object object = jsonObject.get(key);
+                if (object instanceof JSONArray) {
+                    obAry = (JSONArray) object;
+                    subTab = table + "." + key;
+                    if (doConfigMapping.containsKey(subTab)) {
+                        continue labe17;
+                    }
+                    log.error("传入的数据中{}是一个数组，但未找到对应的配置表信息");
+                } else if (object instanceof JSONObject) {
+                    analysisJson(table + "." + key, object, dataModel);
+                } else if (!"operateType".equals(key) && attrMappJson.containsKey(key)) {
+                    if (pk.equals(attrMappJson.getString(key))) {
+                        conditionMap.put(attrMappJson.getString(key), key);
+                        idFlag = false;
+                    } else {
+                        Object val = jsonObject.get(key);
+                        if (val == null || "null".equals(String.valueOf(val))) {
+                            continue;
+                        }
+                        hashMap.put(attrMappJson.getString(key), key);
+                    }
+                    params.put(key, jsonObject.get(key));
+                }
+            }
+
+            if (idFlag) {
+                throw new RuntimeException("未找到" + po + "唯一标识");
+            }
+            if (hashMap.size() > 0) {
+                Map<String, Map<String, String>> colTypes = dataModel.getColTypes();
+                params.put("conditions", conditionMap);
+                params.put("columns", hashMap);
+                params.put("tabColumns", colTypes.get(po));
+                doUpdate(params);
+            }
+            return;
+        } while (obAry.size() < 1);
+
+        Iterator iterator = obAry.iterator();
+        while (iterator.hasNext()) {
+            Object obj = iterator.next();
+            analysisJson(subTab, obj, dataModel);
+        }
     }
+
 
     private List<Map<String, Object>> analysisQuery(JSONObject jsonObject, String po, OperaDetail operaDetail, DataModel dataModel) {
         List<Map<String, Object>> result = new ArrayList<>();
@@ -453,6 +596,11 @@ public class AggrProviderService {
     private void doInsert(Map<String, Object> params) {
         log.info("doInsert ===> {}", JsonUtil.convertObjectToJson(params));
         arrgMapper.insertMysql(params);
+    }
+
+    private void doUpdate(Map<String, Object> params) {
+        log.info("updateMysql ===> {}", JsonUtil.convertObjectToJson(params));
+        arrgMapper.updateMysql(params);
     }
 
     private String getRelaColumnValue(String key, String subKey, String relaCol, DataModel dataModel) {
