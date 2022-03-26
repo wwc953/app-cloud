@@ -124,4 +124,35 @@ public class AggrProvider {
         log.error("insertMysql sql==={}", sql);
         return sql;
     }
+
+    public String selectAll(Map<String, Object> map) {
+        Map<String, String> columns = (Map<String, String>) map.get("columns");
+        Set<Map.Entry<String, String>> entrySet = columns.entrySet();
+        Map<String, String> conditions = (Map<String, String>) map.get("conditions");
+        Set<Map.Entry<String, String>> entrySet2 = conditions.entrySet();
+        Map<String, String> tabColumns = (Map<String, String>) map.get("tabColumns");
+        String sql = new SQL() {{
+            Iterator<Map.Entry<String, String>> it = entrySet.iterator();
+            while (it.hasNext()) {
+                Map.Entry<String, String> entry = it.next();
+                String value = entry.getValue();
+                String columnType = tabColumns.get(value);
+                if (columnType != null && columnType.startsWith("TIMESTAMP")) {
+                    SELECT("cast (" + entry.getValue() + " as date)" + " as \"" + entry.getKey() + "\"");
+                } else {
+                    SELECT(entry.getValue() + " as \"" + entry.getKey() + "\"");
+                }
+            }
+
+            FROM(map.get("tableName").toString());
+            Iterator<Map.Entry<String, String>> iterator = entrySet2.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, String> entry = iterator.next();
+                WHERE(entry.getValue() + "=#{" + entry.getKey() + "}");
+            }
+
+        }}.toString();
+        log.error("selectAll sql==={}", sql);
+        return sql;
+    }
 }

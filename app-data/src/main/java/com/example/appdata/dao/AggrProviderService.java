@@ -9,10 +9,10 @@ import com.example.appstaticutil.json.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import springfox.documentation.spring.web.json.Json;
 
 import java.util.*;
 
@@ -88,7 +88,7 @@ public class AggrProviderService {
 
         JSONObject jsonObject = (JSONObject) obj;
         String operateType = jsonObject.get("operateType") == null ? "" : jsonObject.get("operateType").toString();
-        log.info("{}对应操作类型为：{}", table, operateType);
+        log.info("analysisJson::{}对应操作类型为：{}", table, operateType);
         if (!"no".equals(operateType) && !"".equals(operateType)) {
             Map<String, List<OperaDetail>> doConfigMapping = dataModel.getDoConfigMapping();
             List<OperaDetail> list = doConfigMapping.get(table);
@@ -181,11 +181,18 @@ public class AggrProviderService {
 
             if ("query".equals(operateType)) {
                 key = operaDetail.getDataModelObhjName();
+                log.info("执行query解析...");
+                log.info("jsonObject:{}", JsonUtil.convertObjectToJson(jsonObject));
+                log.info("key:{} ", key);
+                log.info("operaDetail:{}", JsonUtil.convertObjectToJson(operaDetail));
+                log.info("dataModel:{}", JsonUtil.convertObjectToJson(dataModel));
                 List<Map<String, Object>> analysisQuery = analysisQuery(jsonObject, key, operaDetail, dataModel);
                 if (analysisQuery != null && analysisQuery.size() > 0) {
                     Map<String, Object> map = analysisQuery.get(0);
                     EntityUtils.clobToString(map);
                     return map;
+                } else {
+                    return null;
                 }
             }
 
@@ -229,8 +236,143 @@ public class AggrProviderService {
     private void analysisUpdate(String table, JSONObject jsonObject, JSONObject attrMappJson, OperaDetail operaDetail, DataModel dataModel) {
     }
 
-    private List<Map<String, Object>> analysisQuery(JSONObject jsonObject, String key, OperaDetail operaDetail, DataModel dataModel) {
-        return null;
+    private List<Map<String, Object>> analysisQuery(JSONObject jsonObject, String po, OperaDetail operaDetail, DataModel dataModel) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        Map<String, Object> conditionMap = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> columnsMap = new HashMap<>();
+        params.put("tableName", po);
+        String attrMapping = operaDetail.getAttrMapping();
+        JSONObject attrMappJson = JSONObject.fromObject(attrMapping);
+        String fk = operaDetail.getRelaDataObjID();
+        Iterator its = attrMappJson.keys();
+        while (its.hasNext()) {
+            String key = its.next().toString();
+            if (jsonObject.containsKey(key)) {
+                conditionMap.put(key, attrMappJson.getString(key));
+                params.put(key, jsonObject.get(key));
+            }
+
+            if (jsonObject.containsKey(attrMappJson.get(key))) {
+                conditionMap.put(attrMappJson.getString(key), attrMappJson.getString(key));
+                params.put(attrMappJson.get(key).toString(), jsonObject.get(attrMappJson.get(key)));
+            }
+
+            if (key.contains(".")) {
+                int lastIndexOf = key.lastIndexOf(".");
+                String attr = key.substring(lastIndexOf + 1, key.length());
+                columnsMap.put(attr, attrMappJson.getString(key));
+            } else {
+                columnsMap.put(key, attrMappJson.getString(key));
+            }
+        }
+
+        Map<String, Map<String, String>> colTypes = dataModel.getColTypes();
+        params.put("tabColumns", colTypes.get(po));
+        params.put("conditions", conditionMap);
+        params.put("columns", columnsMap);
+        if (conditionMap.size() < 1) {
+            throw new RuntimeException(po + "查询无参数!");
+        }
+
+        List<Map<String, Object>> selectPublic = selectPublic(params);
+        if (selectPublic != null && selectPublic.size() >= 1) {
+            for (Map map : selectPublic) {
+                EntityUtils.clobToString(map);
+                map.put("operateType", "no");
+            }
+            if (StringUtils.isNotEmpty(fk)) {
+                querySub(fk, attrMappJson, selectPublic, dataModel);
+            }
+            return selectPublic;
+        }
+        return result;
+    }
+
+    private void querySub(String fk, JSONObject attrMappJson, List<Map<String, Object>> selectPublic, DataModel dataModel) {
+        Iterator its = attrMappJson.keys();
+        JSONObject objJson = JSONObject.fromObject(fk);
+        Iterator keys = objJson.keys();
+        while (keys.hasNext()) {
+            String next = keys.next().toString();
+            String fkMain = null;
+
+            while (its.hasNext()) {
+                String key = its.next().toString();
+                if (next.equals(attrMappJson.getString(key))) {
+                    fkMain = key;
+                    break;
+                }
+            }
+
+            Object object = objJson.get(next);
+            if (object instanceof JSONArray) {
+                JSONArray ary = (JSONArray) object;
+                for (int i = 0; i < ary.size(); i++) {
+                    String string = ary.get(i).toString();
+                    String[] split = string.split("\\.");
+                    for (int j = 0; j < selectPublic.size(); j++) {
+                        querySubEntry(selectPublic, fkMain, split, dataModel);
+                    }
+                }
+            } else {
+                String string = object.toString();
+                String[] split = string.split("\\.");
+                querySubEntry(selectPublic, fkMain, split, dataModel);
+            }
+
+        }
+    }
+
+    private void querySubEntry(List<Map<String, Object>> selectPublic, String fkMain, String[] split, DataModel dataModel) {
+        Map<String, List<OperaDetail>> poConfigMapping = dataModel.getPoConfigMapping();
+        for (int i = 0; i < selectPublic.size(); i++) {
+            Map<String, Object> map = selectPublic.get(i);
+            Object object2 = map.get(fkMain);
+            Map<String, Object> param = new HashMap<>();
+            if (object2 != null) {
+                String table = split[0];
+                param.put(split[1], object2);
+                List<OperaDetail> operaDetails = poConfigMapping.get(table);
+                if (operaDetails == null) {
+                    throw new RuntimeException("配置有误，未查到对应配置信息" + table);
+                }
+                if (operaDetails.size() > 1) {
+                    for (OperaDetail suboperaDetail : operaDetails) {
+                        getSubEntityList(suboperaDetail, split[0], map, param, dataModel);
+                    }
+                } else {
+                    OperaDetail suboperaDetail = operaDetails.get(0);
+                    getSubEntityList(suboperaDetail, split[0], map, param, dataModel);
+                }
+            }
+        }
+    }
+
+    private void getSubEntityList(OperaDetail suboperaDetail, String table, Map<String, Object> map, Map<String, Object> params, DataModel dataModel) {
+        List<Map<String, Object>> analysisQuery = analysisQuery(JSONObject.fromObject(params), table, suboperaDetail, dataModel);
+        String dol = suboperaDetail.getFldTypeObhjName();
+        String[] split2 = dol.split("\\.");
+        if ("one".equals(suboperaDetail.getRelaMapping())) {
+            if (analysisQuery != null && analysisQuery.size() > 0) {
+                Map<String, Object> map2 = analysisQuery.get(0);
+                map.put(split2[split2.length - 1], map2);
+            } else {
+                map.put(split2[split2.length - 1], null);
+            }
+        } else {
+            if (!"many".equals(suboperaDetail.getRelaMapping()) && suboperaDetail.getRelaMapping() != null) {
+                throw new RuntimeException("配置有误，未查到对应配置信息" + table);
+            }
+            map.put(split2[split2.length - 1], analysisQuery);
+        }
+    }
+
+    private List<Map<String, Object>> selectPublic(Map<String, Object> params) {
+        log.info("selectPublic ===> {}", JsonUtil.convertObjectToJson(params));
+        List<Map<String, Object>> result = arrgMapper.selectPublic(params);
+        log.info("selectPublic <=== {}", JsonUtil.convertObjectToJson(result));
+        return result;
     }
 
     private void analysisInsert(String table, JSONObject jsonObject, JSONObject attrMappJson, OperaDetail operaDetail, DataModel dataModel) {

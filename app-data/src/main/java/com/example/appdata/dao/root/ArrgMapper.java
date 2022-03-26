@@ -20,4 +20,7 @@ public interface ArrgMapper {
 
     @SelectProvider(type = AggrProvider.class, method = "insertOracle")
     long insertOracle(Map<String, Object> map);
+
+    @SelectProvider(type = AggrProvider.class, method = "selectAll")
+    List<Map<String, Object>> selectPublic(Map<String, Object> params);
 }
