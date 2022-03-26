@@ -15,6 +15,9 @@ public interface ArrgMapper {
     @SelectProvider(type = AggrProvider.class, method = "selectColumnTypeMySQL")
     List<Map<String, Object>> selectColumnTypeMySQL(Map<String, Object> params);
 
-    @SelectProvider(type = AggrProvider.class, method = "insert")
-    long insert(Map<String, Object> map);
+    @SelectProvider(type = AggrProvider.class, method = "insertMysql")
+    void insertMysql(Map<String, Object> map);
+
+    @SelectProvider(type = AggrProvider.class, method = "insertOracle")
+    long insertOracle(Map<String, Object> map);
 }

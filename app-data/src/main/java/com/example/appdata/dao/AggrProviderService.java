@@ -12,6 +12,7 @@ import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import springfox.documentation.spring.web.json.Json;
 
 import java.util.*;
 
@@ -263,8 +264,11 @@ public class AggrProviderService {
         }
 
         Map<String, Map<String, String>> colTypes = dataModel.getColTypes();
-        params.put("colums", hashMap);
-        params.put("tabColums", colTypes.get(po.toUpperCase()));
+        log.error("colTypes<==>{}", JsonUtil.convertObjectToJson(colTypes));
+        params.put("columns", hashMap);
+        log.error("po.toUpperCase()<==>{}", po.toUpperCase());
+//        params.put("tabColumns", colTypes.get(po.toUpperCase()));
+        params.put("tabColumns", colTypes.get(po));
         doInsert(params);
         Iterator it = jsonObject.keys();
         Map<String, JSONObject> curent = dataModel.getCurent();
@@ -306,9 +310,7 @@ public class AggrProviderService {
 
     private void doInsert(Map<String, Object> params) {
         log.info("doInsert ===> {}", JsonUtil.convertObjectToJson(params));
-        long insert = arrgMapper.insert(params);
-        log.info("doInsert <=== {}", insert);
-
+        arrgMapper.insertMysql(params);
     }
 
     private String getRelaColumnValue(String key, String subKey, String relaCol, DataModel dataModel) {

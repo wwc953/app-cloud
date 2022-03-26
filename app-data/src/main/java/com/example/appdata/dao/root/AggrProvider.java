@@ -76,7 +76,7 @@ public class AggrProvider {
         return sql;
     }
 
-    public String insert(Map<String, Object> map) {
+    public String insertOracle(Map<String, Object> map) {
         Map<String, String> columns = (Map<String, String>) map.get("columns");
         Map<String, String> tabColumns = (Map<String, String>) map.get("tabColumns");
         Set<Map.Entry<String, String>> entrySet = columns.entrySet();
@@ -87,7 +87,7 @@ public class AggrProvider {
                 Map.Entry<String, String> entry = iterator.next();
                 String key = entry.getKey();
                 String upVal = key.toUpperCase();
-                String columnType = tabColumns.get(upVal);
+                String columnType = tabColumns.get(key);
                 if (entry.getKey().toUpperCase().equals(upVal) && "DATE".equals(columnType)) {
                     VALUES(entry.getKey(), "to_date(#{" + entry.getValue() + "},'yyyy-MM-dd hh24:mi:ss')");
                 } else if (entry.getKey().toUpperCase().equals(upVal) && columnType.startsWith("TIMESTAMP")) {
@@ -97,7 +97,31 @@ public class AggrProvider {
                 }
             }
         }}.toString();
-        log.error("insert sql==={}", sql);
+        return sql;
+    }
+
+    public String insertMysql(Map<String, Object> map) {
+        Map<String, String> columns = (Map<String, String>) map.get("columns");
+        Map<String, String> tabColumns = (Map<String, String>) map.get("tabColumns");
+        Set<Map.Entry<String, String>> entrySet = columns.entrySet();
+        String sql = new SQL() {{
+            INSERT_INTO(map.get("tableName").toString());
+            Iterator<Map.Entry<String, String>> iterator = entrySet.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, String> entry = iterator.next();
+                String key = entry.getKey();
+//                String upVal = key.toUpperCase();
+                String columnType = tabColumns.get(key);
+                if (entry.getKey().toUpperCase().equals(key) && "DATE".equals(columnType)) {
+                    VALUES(entry.getKey(), "to_date(#{" + entry.getValue() + "},'yyyy-MM-dd hh24:mi:ss')");
+                } else if (entry.getKey().toUpperCase().equals(key) && columnType.startsWith("TIMESTAMP")) {
+                    VALUES(entry.getKey(), "to_timestamp(#{" + entry.getValue() + "},'yyyy-MM-dd hh24:mi:ss')");
+                } else {
+                    VALUES(entry.getKey(), "#{" + entry.getValue() + "}");
+                }
+            }
+        }}.toString();
+        log.error("insertMysql sql==={}", sql);
         return sql;
     }
 }
