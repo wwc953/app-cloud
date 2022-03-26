@@ -39,6 +39,7 @@ public class AggrProviderService {
 
     public Object executePost(String paramStr, DataOperation operaConfig, boolean flag, String appName) {
         DataModel dataModel = new DataModel(paramStr, operaConfig, flag, appName);
+        log.error("dataModel==>{}", JsonUtil.convertObjectToJson(dataModel));
         JSONObject inParams = dataModel.getInParams();
         Iterator<String> keys = inParams.keys();
         boolean singleFlag = (inParams.size() <= 1);
@@ -74,6 +75,7 @@ public class AggrProviderService {
                 }
             }
         }
+        log.error("executePost<==={}", JsonUtil.convertObjectToJson(resultMap));
         return resultMap;
     }
 
@@ -203,7 +205,7 @@ public class AggrProviderService {
                     if (gtsResult == null || gtsResult.size() < 1) {
                         throw new RuntimeException("删除的数据不存在");
                     }
-                    deleteGTXdata(gtsResult,dataModel);
+                    deleteGTXdata(gtsResult, dataModel);
                 } else {
                     analysisDelete(params, operaDetail, conditionMap, dataModel.getPoConfigMapping());
                 }
@@ -231,5 +233,128 @@ public class AggrProviderService {
     }
 
     private void analysisInsert(String table, JSONObject jsonObject, JSONObject attrMappJson, OperaDetail operaDetail, DataModel dataModel) {
+        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
+        String po = operaDetail.getDataModelObhjName();
+        if (po == null) {
+            throw new RuntimeException("配置信息异常," + table + "配置的数据对象不能为空");
+        }
+        params.put("tableName", po);
+        Iterator its = attrMappJson.keys();
+        while (its.hasNext()) {
+            String key = its.next().toString();
+            if (key.contains(".")) {
+                String[] split = key.split("\\.");
+                String relaCol = split[split.length - 1];
+                String relaColumnValue = getRelaColumnValue(key, key, relaCol, dataModel);
+                if (relaColumnValue == null) {
+                    log.error("参数传入异常，未找到{}对应数据", key);
+                } else {
+                    hashMap.put(attrMappJson.getString(key), attrMappJson.getString(key));
+                    params.put(attrMappJson.getString(key), relaColumnValue);
+                }
+            } else {
+                Object val = jsonObject.get(key);
+                if (val != null && !"null".equals(String.valueOf(val))) {
+                    hashMap.put(attrMappJson.getString(key), key);
+                    params.put(key, jsonObject.getString(key));
+                }
+            }
+        }
+
+        Map<String, Map<String, String>> colTypes = dataModel.getColTypes();
+        params.put("colums", hashMap);
+        params.put("tabColums", colTypes.get(po.toUpperCase()));
+        doInsert(params);
+        Iterator it = jsonObject.keys();
+        Map<String, JSONObject> curent = dataModel.getCurent();
+        if (curent.containsKey(table)) {
+            JSONObject jsonObject2 = curent.get(table);
+            if (jsonObject.equals(jsonObject2)) {
+                return;
+            }
+        }
+
+        curent.put(table, jsonObject);
+        Map<String, List<OperaDetail>> doConfigMapping = dataModel.getDoConfigMapping();
+        String key;
+        Object object;
+        do {
+            if (!it.hasNext()) {
+                return;
+            }
+            key = it.next().toString();
+            object = jsonObject.get(key);
+        } while (attrMappJson.containsKey(key));
+
+        if (object instanceof JSONObject) {
+            analysisJson(table + "." + key, object, dataModel);
+        } else if (object instanceof JSONArray) {
+            String subTab = table + "." + key;
+            if (doConfigMapping.containsKey(subTab)) {
+                JSONArray obAry = (JSONArray) object;
+                for (Object obj : obAry) {
+                    analysisJson(subTab, obj, dataModel);
+                }
+            } else {
+                log.error("传入的数据中{}是一个数组，但未找到对应的配置表信息", subTab);
+            }
+        }
+
+
+    }
+
+    private void doInsert(Map<String, Object> params) {
+        log.info("doInsert ===> {}", JsonUtil.convertObjectToJson(params));
+        long insert = arrgMapper.insert(params);
+        log.info("doInsert <=== {}", insert);
+
+    }
+
+    private String getRelaColumnValue(String key, String subKey, String relaCol, DataModel dataModel) {
+        Map<String, JSONObject> curent = dataModel.getCurent();
+        if (subKey.contains(".")) {
+            int lastIndexOf = subKey.lastIndexOf(".");
+            String relaTab = subKey.substring(0, lastIndexOf);
+            JSONObject relaObj = curent.get(relaTab);
+            return relaObj == null ? getRelaColumnValue(key, relaTab, relaCol, dataModel) : aysnoGetValue(key, relaObj, relaTab, relaCol);
+        } else {
+            JSONObject relaObj = curent.get(subKey);
+            if (relaObj == null) {
+                throw new RuntimeException("未找到" + key + "对应数据");
+            }
+            return aysnoGetValue(key, relaObj, subKey, relaCol);
+        }
+
+    }
+
+    private String aysnoGetValue(String key, JSONObject relaObj, String subKey, String relaCol) {
+        if (relaObj.containsKey(relaCol)) {
+            return relaObj.getString(relaCol);
+        }
+
+        String substring = key.substring(0, subKey.length() + 1);
+        Object obj = relaObj;
+        String[] split = substring.split("\\.");
+        for (int i = 0; i < split.length - 1; i++) {
+            String attr = split[i];
+            if (obj instanceof JSONArray) {
+                throw new RuntimeException("配置信息异常，配置取同济数据或下级数据时支持多条数据");
+            }
+            if (obj instanceof JSONObject) {
+                JSONObject jsonObj = (JSONObject) obj;
+                if (!jsonObj.containsKey(attr)) {
+                    throw new RuntimeException("未找到" + key + "对应数据");
+                }
+                obj = jsonObj.get(attr);
+            }
+        }
+
+        JSONObject jsonObj = (JSONObject) obj;
+        if (jsonObj.containsKey(relaCol)) {
+            return jsonObj.getString(relaCol);
+        } else {
+            throw new RuntimeException("未找到" + key + "对应数据");
+        }
     }
 }

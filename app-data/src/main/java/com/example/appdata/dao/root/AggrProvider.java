@@ -75,4 +75,29 @@ public class AggrProvider {
         log.error("selectColumnTypeMySQL==={}", sql);
         return sql;
     }
+
+    public String insert(Map<String, Object> map) {
+        Map<String, String> columns = (Map<String, String>) map.get("columns");
+        Map<String, String> tabColumns = (Map<String, String>) map.get("tabColumns");
+        Set<Map.Entry<String, String>> entrySet = columns.entrySet();
+        String sql = new SQL() {{
+            INSERT_INTO(map.get("tableName").toString());
+            Iterator<Map.Entry<String, String>> iterator = entrySet.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, String> entry = iterator.next();
+                String key = entry.getKey();
+                String upVal = key.toUpperCase();
+                String columnType = tabColumns.get(upVal);
+                if (entry.getKey().toUpperCase().equals(upVal) && "DATE".equals(columnType)) {
+                    VALUES(entry.getKey(), "to_date(#{" + entry.getValue() + "},'yyyy-MM-dd hh24:mi:ss')");
+                } else if (entry.getKey().toUpperCase().equals(upVal) && columnType.startsWith("TIMESTAMP")) {
+                    VALUES(entry.getKey(), "to_timestamp(#{" + entry.getValue() + "},'yyyy-MM-dd hh24:mi:ss')");
+                } else {
+                    VALUES(entry.getKey(), "#{" + entry.getValue() + "}");
+                }
+            }
+        }}.toString();
+        log.error("insert sql==={}", sql);
+        return sql;
+    }
 }
