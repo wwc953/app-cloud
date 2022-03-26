@@ -62,8 +62,21 @@ public class DataOperateFilter implements Filter {
             } else {
                 ResponseResult executePost = null;
                 if (!"0".equals(operaConfig.getOpType()) && !"01".equals(operaConfig.getOpType())) {
-                    //TODO
-
+                    if ("1".equals(operaConfig.getOpType())) {
+                        if (operaConfig.getColTypes() == null) {
+                            writeResult(res, ResultUtils.warpResult("-1", "未找到配置信息中对应表结构，请检查"), false);
+                            return;
+                        }
+                        executePost = providerService.executePost(paramStr, operaConfig, false, appName);
+                        if (executePost == null) {
+                            executePost = ResultUtils.warpResult("00000", "操作成功");
+                        } else {
+                            executePost = ResultUtils.warpResult(executePost);
+                        }
+                        writeResult(res, executePost, true);
+                    } else {
+                        writeResult(res, ResultUtils.warpResult("-1", "配置信息操作类型有误"), false);
+                    }
                 } else {
                     // 查询
                     executePost = customSqlProviderServer.executeQuery(paramStr, operaConfig);
@@ -111,10 +124,11 @@ public class DataOperateFilter implements Filter {
                 sb.deleteCharAt(sb.length() - 1);
 
 //                getDataColumnTypeOracle(columns, conditions, params);
-                getDataColumnTypeMySQL(columns, conditions, params);
-
-                params.put("tabName", sb.toString());
+//                params.put("tabName", sb.toString());
 //                List<Map<String, Object>> tabColumns = providerService.selectColumnTypeOracle(params);
+
+                getDataColumnTypeMySQL(columns, conditions, params, "appcommon");
+                params.put("tabName", sb.toString().toLowerCase());
                 List<Map<String, Object>> tabColumns = providerService.selectColumnTypeMySQL(params);
 
                 if (tabColumns != null && tabColumns.size() > 0) {
@@ -130,7 +144,7 @@ public class DataOperateFilter implements Filter {
                             map2.put(columnName, columnType);
                         } else {
                             Map<String, String> map2 = new HashMap<>(32);
-                            map.put(columnName, columnType);
+                            map2.put(columnName, columnType);
                             tabColMap.put(table, map2);
                         }
                     }
@@ -154,13 +168,14 @@ public class DataOperateFilter implements Filter {
         params.put("conditions", conditions);
     }
 
-    private void getDataColumnTypeMySQL(Map<String, String> columns, Map<String, String> conditions, Map<String, Object> params) {
+    private void getDataColumnTypeMySQL(Map<String, String> columns, Map<String, String> conditions, Map<String, Object> params, String tableSchema) {
         columns.clear();
         conditions.clear();
         columns.put("tableName", "table_Name");
         columns.put("columnName", "column_Name");
         columns.put("columnType", "data_type");
         conditions.put("tabName", "table_Name");
+//        params.put("table_schema", tableSchema);
         params.put("columns", columns);
 //        params.put("tableName", "all_tab_cols");
         params.put("tableName", "information_schema.columns");

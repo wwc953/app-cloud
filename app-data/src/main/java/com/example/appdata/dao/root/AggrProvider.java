@@ -41,7 +41,7 @@ public class AggrProvider {
             }
 
         }}.toString();
-
+        log.error("selectColumnTypeOracle==={}", sql);
         return sql;
     }
 
@@ -72,7 +72,7 @@ public class AggrProvider {
             }
 
         }}.toString();
-
+        log.error("selectColumnTypeMySQL==={}", sql);
         return sql;
     }
 }
