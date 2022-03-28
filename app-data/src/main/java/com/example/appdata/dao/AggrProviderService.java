@@ -6,10 +6,12 @@ import com.example.appdata.model.DataOperation;
 import com.example.appdata.model.OperaDetail;
 import com.example.appstaticutil.entity.EntityUtils;
 import com.example.appstaticutil.json.JsonUtil;
+import javafx.beans.binding.ObjectExpression;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.jdbc.SQL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -236,6 +238,66 @@ public class AggrProviderService {
     }
 
     private void analysisDelete(Map<String, Object> params, OperaDetail operaDetail, Map<String, Object> conditionMap, Map<String, List<OperaDetail>> poConfigMapping) {
+        String table = operaDetail.getDataModelObhjName();
+        String fk = operaDetail.getRelaDataObjID();
+        if (StringUtils.isNotBlank(fk)) {
+            JSONObject objJson = JSONObject.fromObject(fk);
+            Iterator keys = objJson.keys();
+
+            String next = null;
+            Object object = null;
+            String condititon = null;
+            SQL from = null;
+            do {
+                if (!keys.hasNext()) {
+                    break;
+                }
+                next = keys.next().toString();
+                object = objJson.get(next);
+                if (object instanceof JSONArray) {
+                    JSONArray ary = (JSONArray) object;
+                    from = (new SQL()).SELECT(next).FROM(table);
+                    Set<Map.Entry<String, Object>> entrySet = conditionMap.entrySet();
+                    Iterator<Map.Entry<String, Object>> iterator = entrySet.iterator();
+                    while (iterator.hasNext()) {
+                        Map.Entry<String, Object> entry = iterator.next();
+                        condititon = " in (" + entry.getValue() + ")";
+                        from.WHERE(entry.getKey() + condititon);
+                    }
+
+                    for (int i = 0; i < ary.size(); i++) {
+                        String string = ary.get(i).toString();
+                        String[] split = string.split("\\.");
+                        String condition = "(" + from.toString() + ")";
+                        List<OperaDetail> subOperDeatil = poConfigMapping.get(split[0]);
+                        Map<String, Object> subCondition = new HashMap<>();
+                        subCondition.put(split[1], condition);
+                        analysisDelete(params, subOperDeatil.get(0), conditionMap, poConfigMapping);
+                    }
+                }
+            } while (!(object instanceof JSONObject));
+
+            JSONObject hsonOb = (JSONObject) object;
+            from = (new SQL()).SELECT(next).FROM(table);
+            Set<Map.Entry<String, Object>> entrySet = conditionMap.entrySet();
+            Iterator<Map.Entry<String, Object>> iterator = entrySet.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, Object> entry = iterator.next();
+                condititon = " in (" + entry.getValue() + ") ";
+                from.WHERE(entry.getKey() + condititon);
+            }
+
+            String string = hsonOb.toString();
+            String[] split = string.split("\\.");
+            String condition = "(" + from.toString() + ")";
+            List<OperaDetail> subOperDeatil = poConfigMapping.get(split[0]);
+            Map<String, Object> subCondition = new HashMap<>();
+            subCondition.put(split[1], condition);
+            analysisDelete(params, subOperDeatil.get(0), conditionMap, poConfigMapping);
+        }
+        params.put("tableName", table);
+        params.put("conditions", conditionMap);
+        doDelete(params);
     }
 
     private void analysisUpdate(String table, JSONObject jsonObject, JSONObject attrMappJson, OperaDetail operaDetail, DataModel dataModel) {
@@ -524,6 +586,11 @@ public class AggrProviderService {
     private void doUpdate(Map<String, Object> params) {
         log.info("updateMysql ===> {}", JsonUtil.convertObjectToJson(params));
         arrgMapper.updateMysql(params);
+    }
+
+    private void doDelete(Map<String, Object> params) {
+        log.info("doDeleteMysql ===> {}", JsonUtil.convertObjectToJson(params));
+        arrgMapper.deleteMysql(params);
     }
 
     private String getRelaColumnValue(String key, String subKey, String relaCol, DataModel dataModel) {

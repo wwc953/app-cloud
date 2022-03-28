@@ -159,6 +159,21 @@ public class AggrProvider {
         return sql;
     }
 
+    public String deleteMysql(Map<String, Object> map) {
+        Map<String, String> conditions = (Map<String, String>) map.get("conditions");
+        Set<Map.Entry<String, String>> entrySet = conditions.entrySet();
+        String sql = new SQL() {{
+            DELETE_FROM(map.get("tableName").toString());
+            Iterator<Map.Entry<String, String>> iterator = entrySet.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, String> entry = iterator.next();
+                WHERE(entry.getKey() + " in (" + entry.getValue() + ")");
+            }
+        }}.toString();
+        log.error("deleteMysql sql==={}", sql);
+        return sql;
+    }
+
     public String selectAll(Map<String, Object> map) {
         Map<String, String> columns = (Map<String, String>) map.get("columns");
         Set<Map.Entry<String, String>> entrySet = columns.entrySet();

@@ -26,4 +26,7 @@ public interface ArrgMapper {
 
     @SelectProvider(type = AggrProvider.class, method = "updateMysql")
     void updateMysql(Map<String, Object> params);
+
+    @SelectProvider(type = AggrProvider.class, method = "deleteMysql")
+    void deleteMysql(Map<String, Object> params);
 }
