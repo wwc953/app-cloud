@@ -112,46 +112,52 @@ public class DataOperateFilter implements Filter {
         Map<String, String> columns = new HashMap<>();
         Map<String, String> conditions = new HashMap<>();
         Map<String, Object> params = new HashMap<>();
+
         DataOperation dataOperation = dataOperationMapper.getDataOperationByUri(uri);
-        if (dataOperation != null) {
-            getOperaDetails(dataOperation, uri);
-            List<OperaDetail> operaDetails = dataOperation.getcDataSrvRelaDOList();
-            if ("1".equals(dataOperation.getOpType()) && !CollectionUtils.isEmpty(operaDetails)) {
-                StringBuffer sb = new StringBuffer();
-                for (OperaDetail detail : operaDetails) {
-                    sb.append("'").append(detail.getDataModelObhjName().toUpperCase()).append("'").append(",");
-                }
-                sb.deleteCharAt(sb.length() - 1);
+        if (dataOperation == null) {
+            return dataOperation;
+        }
+
+        getOperaDetails(dataOperation, uri);
+
+        List<OperaDetail> operaDetails = dataOperation.getcDataSrvRelaDOList();
+        if ("1".equals(dataOperation.getOpType()) && !CollectionUtils.isEmpty(operaDetails)) {
+            StringBuffer sb = new StringBuffer();
+            for (OperaDetail detail : operaDetails) {
+                sb.append("'").append(detail.getDataModelObhjName()).append("'").append(",");
+            }
+            sb.deleteCharAt(sb.length() - 1);
 
 //                getDataColumnTypeOracle(columns, conditions, params);
-//                params.put("tabName", sb.toString());
+//                params.put("tabName", sb.toString().toUpperCase());
 //                List<Map<String, Object>> tabColumns = providerService.selectColumnTypeOracle(params);
 
-                getDataColumnTypeMySQL(columns, conditions, params, "appcommon");
-                params.put("tabName", sb.toString().toLowerCase());
-                List<Map<String, Object>> tabColumns = providerService.selectColumnTypeMySQL(params);
+            getDataColumnTypeMySQL(columns, conditions, params, "appcommon");
+            params.put("tabName", sb.toString().toLowerCase());
+            List<Map<String, Object>> tabColumns = providerService.selectColumnTypeMySQL(params);
 
-                if (tabColumns != null && tabColumns.size() > 0) {
-                    Map<String, Map<String, String>> tabColMap = new HashMap<>(32);
-                    Iterator<Map<String, Object>> iterator = tabColumns.iterator();
-                    while (iterator.hasNext()) {
-                        Map<String, Object> map = iterator.next();
-                        String table = map.get("tableName") == null ? "" : map.get("tableName").toString();
-                        String columnName = map.get("columnName") == null ? "" : map.get("columnName").toString();
-                        String columnType = map.get("columnType") == null ? "" : map.get("columnType").toString();
-                        if (tabColMap.containsKey(table)) {
-                            Map<String, String> map2 = tabColMap.get(table);
-                            map2.put(columnName, columnType);
-                        } else {
-                            Map<String, String> map2 = new HashMap<>(32);
-                            map2.put(columnName, columnType);
-                            tabColMap.put(table, map2);
-                        }
+            if (tabColumns != null && tabColumns.size() > 0) {
+                Map<String, Map<String, String>> tabColMap = new HashMap<>(32);
+                Iterator<Map<String, Object>> iterator = tabColumns.iterator();
+                while (iterator.hasNext()) {
+                    Map<String, Object> map = iterator.next();
+                    String table = map.get("tableName") == null ? "" : map.get("tableName").toString();
+                    String columnName = map.get("columnName") == null ? "" : map.get("columnName").toString();
+                    String columnType = map.get("columnType") == null ? "" : map.get("columnType").toString();
+
+                    if (tabColMap.containsKey(table)) {
+                        Map<String, String> map2 = tabColMap.get(table);
+                        map2.put(columnName, columnType);
+                    } else {
+                        Map<String, String> map2 = new HashMap<>(32);
+                        map2.put(columnName, columnType);
+                        tabColMap.put(table, map2);
                     }
-                    dataOperation.setColTypes(tabColMap);
                 }
+                dataOperation.setColTypes(tabColMap);
             }
         }
+
         return dataOperation;
     }
 
