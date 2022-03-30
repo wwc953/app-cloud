@@ -6,7 +6,6 @@ import com.example.appdata.model.DataOperation;
 import com.example.appdata.model.OperaDetail;
 import com.example.appstaticutil.entity.EntityUtils;
 import com.example.appstaticutil.json.JsonUtil;
-import javafx.beans.binding.ObjectExpression;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
