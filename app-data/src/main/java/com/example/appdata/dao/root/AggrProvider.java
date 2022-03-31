@@ -206,6 +206,8 @@ public class AggrProvider {
     }
 
     public String doBatchResult(Map<String, Object> map) {
-        return map.get("SQL").toString();
+        String string = map.get("SQL").toString();
+        log.error("doBatchResult SQL==={}", string);
+        return string;
     }
 }
