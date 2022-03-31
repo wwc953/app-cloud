@@ -2,6 +2,7 @@ package com.example.appdata.dao.root;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
 
 import java.util.List;
 import java.util.Map;
@@ -15,18 +16,21 @@ public interface ArrgMapper {
     @SelectProvider(type = AggrProvider.class, method = "selectColumnTypeMySQL")
     List<Map<String, Object>> selectColumnTypeMySQL(Map<String, Object> params);
 
-    @SelectProvider(type = AggrProvider.class, method = "insertMysql")
+    @UpdateProvider(type = AggrProvider.class, method = "insertMysql")
     void insertMysql(Map<String, Object> map);
 
-    @SelectProvider(type = AggrProvider.class, method = "insertOracle")
+    @UpdateProvider(type = AggrProvider.class, method = "insertOracle")
     long insertOracle(Map<String, Object> map);
 
     @SelectProvider(type = AggrProvider.class, method = "selectAll")
     List<Map<String, Object>> selectPublic(Map<String, Object> params);
 
-    @SelectProvider(type = AggrProvider.class, method = "updateMysql")
+    @UpdateProvider(type = AggrProvider.class, method = "updateMysql")
     void updateMysql(Map<String, Object> params);
 
-    @SelectProvider(type = AggrProvider.class, method = "deleteMysql")
+    @UpdateProvider(type = AggrProvider.class, method = "deleteMysql")
     void deleteMysql(Map<String, Object> params);
+
+    @UpdateProvider(type = AggrProvider.class, method = "doBatchResult")
+    void insertBatch(Map<String, Object> params);
 }

@@ -204,4 +204,8 @@ public class AggrProvider {
         log.error("selectAll sql==={}", sql);
         return sql;
     }
+
+    public String doBatchResult(Map<String, Object> map) {
+        return map.get("SQL").toString();
+    }
 }

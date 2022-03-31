@@ -638,4 +638,58 @@ public class AggrProviderService {
             throw new RuntimeException("未找到" + key + "对应数据");
         }
     }
+
+    public Object executeQuery(String paramStr, DataOperation operaConfig, boolean oneFlag, String appName) {
+        Map<String, Object> resultMap = new HashMap<>();
+        DataModel dataModel = new DataModel(paramStr, operaConfig, false, appName);
+        JSONObject inParams = dataModel.getInParams();
+        Iterator keys = inParams.keys();
+        String next = (String) keys.next();
+        Object object = inParams.get(next);
+
+        if (object instanceof JSONObject) {
+            JSONObject jsonObject = (JSONObject) object;
+            String operateType = jsonObject.get("operateType") == null ? "" : jsonObject.get("operateType").toString();
+            log.info("{}对应的操作类型为：{}", next, operateType);
+            if (!"query".equals(operateType)) {
+                throw new RuntimeException("只支持查询功能, 传入类型有误");
+            }
+            Map<String, List<OperaDetail>> doConfigMapping = dataModel.getDoConfigMapping();
+            List<OperaDetail> list = doConfigMapping.get(next);
+            if (list == null) {
+                throw new RuntimeException("未找到" + next + "对应的属性映射配置");
+            }
+
+            if (list.size() > 1) {
+                Iterator<OperaDetail> iterator = list.iterator();
+                List<Map<String, Object>> analysisQuery = null;
+                do {
+                    if (!iterator.hasNext()) {
+                        return resultMap;
+                    }
+                    OperaDetail operaDetail = iterator.next();
+                    String po = operaDetail.getDataModelObhjName();
+                    analysisQuery = analysisQuery(jsonObject, po, operaDetail, dataModel);
+                    if (analysisQuery.size() == 1) {
+                        Map<String, Object> analuMap = analysisQuery.get(0);
+                        resultMap.putAll(analuMap);
+                    }
+                } while (analysisQuery.size() <= 1);
+                throw new RuntimeException("无法识别多条纪录之间的合并关系，暂不支持当前条件查询聚合拆分情况");
+            }
+
+            OperaDetail operaDetail = list.get(0);
+            String po = operaDetail.getDataModelObhjName();
+            List<Map<String, Object>> analysisQuery = analysisQuery(jsonObject, po, operaDetail, dataModel);
+            if (!oneFlag) {
+                return analysisQuery;
+            }
+
+            if (analysisQuery.size() > 0) {
+                resultMap = analysisQuery.get(0);
+            }
+
+        }
+        return resultMap;
+    }
 }

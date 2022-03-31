@@ -1,5 +1,6 @@
 package com.example.appdata.filter;
 
+import com.example.appdata.dao.AggrBatchProviderService;
 import com.example.appdata.dao.AggrProviderService;
 import com.example.appdata.dao.CustomSqlProviderServer;
 import com.example.appdata.dao.dataopera.DataOperationMapper;
@@ -29,6 +30,7 @@ public class DataOperateFilter implements Filter {
     DataOperationMapper dataOperationMapper;
     CustomSqlProviderServer customSqlProviderServer;
     AggrProviderService providerService;
+    AggrBatchProviderService aggrBatchProviderService;
     String serverName;
 
     @Override
@@ -38,6 +40,7 @@ public class DataOperateFilter implements Filter {
         customSqlProviderServer = context.getBean(CustomSqlProviderServer.class);
         dataOperationMapper = context.getBean(DataOperationMapper.class);
         providerService = context.getBean(AggrProviderService.class);
+        aggrBatchProviderService = context.getBean(AggrBatchProviderService.class);
         serverName = "/" + context.getEnvironment().getProperty("spring.application.name");
     }
 
@@ -67,12 +70,23 @@ public class DataOperateFilter implements Filter {
                             writeResult(res, ResultUtils.warpResult("-1", "未找到配置信息中对应表结构，请检查"), false);
                             return;
                         }
-                        executePost = providerService.executePost(paramStr, operaConfig, false, appName);
+
+                        if (uri.contains("_getOne")) {
+                            executePost = providerService.executeQuery(paramStr, operaConfig, true, appName);
+                        } else if (uri.contains("_getAll")) {
+                            executePost = providerService.executeQuery(paramStr, operaConfig, false, appName);
+                        } else if (uri.contains("_batch")) {
+                            executePost = aggrBatchProviderService.excuteBetch(paramStr, operaConfig);
+                        } else {
+                            executePost = providerService.executePost(paramStr, operaConfig, false, appName);
+                        }
+
                         if (executePost == null) {
                             executePost = ResultUtils.warpResult("00000", "操作成功");
                         } else {
                             executePost = ResultUtils.warpResult(executePost);
                         }
+
                         writeResult(res, executePost, true);
                     } else {
                         writeResult(res, ResultUtils.warpResult("-1", "配置信息操作类型有误"), false);
