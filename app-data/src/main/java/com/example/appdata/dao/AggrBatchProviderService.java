@@ -157,6 +157,7 @@ public class AggrBatchProviderService {
     }
 
     private String getBeachInsertSql(Map<String, Object> map, Integer size) {
+        log.info("getBeachInsertSql map:{},size:{}", JsonUtil.convertMapToJson(map), size);
         try {
             String tableName = map.get("tableName").toString();
             String attrMapping = map.get("attrMapping").toString();
@@ -173,7 +174,8 @@ public class AggrBatchProviderService {
             while (iterator.hasNext()) {
                 String next = iterator.next().toString();
                 sql = jsonObject.get(next).toString();
-                replaceAll = sql.toUpperCase();
+//                replaceAll = sql.toUpperCase();
+                replaceAll = sql.toLowerCase();
                 log.error("replaceAll==={}", replaceAll);
                 Object object2 = colunmType.get(replaceAll);
                 String object = object2.toString();
