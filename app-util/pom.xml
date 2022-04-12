@@ -90,6 +90,13 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.15</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
 </project>
