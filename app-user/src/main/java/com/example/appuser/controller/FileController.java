@@ -1,10 +1,10 @@
 package com.example.appuser.controller;
 
-import com.example.appuser.model.User;
 import com.example.appuser.remote.IOrderServiceFeign;
-import com.example.appuser.service.UserServiceImpl;
 import com.netflix.client.ClientException;
 import feign.Response;
+import feign.Util;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -20,38 +20,19 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 @Slf4j
+@Api(tags = "远程上传、下载文件")
+@RequestMapping("/file")
 @RestController
-public class UserController {
+public class FileController {
 
     @Autowired
     IOrderServiceFeign orderServiceFeign;
 
-    @Autowired
-    UserServiceImpl userService;
-
-    @PostMapping("/local")
-    public String callLocal() {
-        log.info("=============== user ===============");
-        return "local user";
-    }
-
-    @ApiOperation(value = "feign远程服务调用order", notes = "remote call test")
-    @GetMapping("/user/{param}")
-    public String callOrder(@PathVariable String param) {
-        return orderServiceFeign.callOrder(param);
-    }
-
-    @GetMapping("/getUser/{id}")
-    public User getUser(@PathVariable Integer id) {
-        return userService.getUserById(id);
-    }
-
-    @GetMapping("/cOrder/{id}")
-    public String getOrder(@PathVariable(value = "id") Integer id) {
-        return orderServiceFeign.getOrderFromOrder(id);
-    }
 
     @ApiOperation(value = "远程调用文件上传测试")
     @RequestMapping(value = "/orderupload", method = RequestMethod.POST)
@@ -85,13 +66,7 @@ public class UserController {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            IOUtils.closeQuietly(inputStream);
         }
         return result;
     }
@@ -101,14 +76,30 @@ public class UserController {
     public void download2(@RequestParam String fileName, HttpServletResponse response) throws ClientException {
         log.info("使用feign调用服务 文件下载");
         Response feignResponse = orderServiceFeign.download(fileName);
+        ServletOutputStream out = null;
         try {
             Response.Body body = feignResponse.body();
-            InputStream inputStream = body.asInputStream();
-            ServletOutputStream out = response.getOutputStream();
+            out = response.getOutputStream();
+
             response.setHeader("content-disposition", "attachment;fileName=" + fileName);
-            out.write(IOUtils.toByteArray(inputStream));
+
+            //补全响应头信息
+//            Map<String, Collection<String>> headers = feignResponse.headers();
+//            Iterator<String> iterator = headers.keySet().iterator();
+//            while (iterator.hasNext()) {
+//                String field = iterator.next();
+//                Iterator<String> it = Util.valuesOrEmpty(headers, field).iterator();
+//                while (it.hasNext()) {
+//                    String value = it.next();
+//                    response.setHeader(field, value);
+//                }
+//            }
+
+            out.write(IOUtils.toByteArray(body.asInputStream()));
         } catch (Exception e) {
             throw new ClientException("get credit-order graphics fail :{} ", e);
+        } finally {
+            IOUtils.closeQuietly(out);
         }
 
     }
